@@ -9,11 +9,11 @@ const codeSnippets = [
         id: 'sdk',
         label: 'JS / TS SDK',
         language: 'typescript',
-        code: `import { PasswordFlow, Sql } from '@centia-io/sdk';
+        code: `import { PasswordFlow, Sql } from '@mapcentia/gc2-sdk';
 
 // Sign in once — the SDK stores and refreshes tokens for you
 await new PasswordFlow({
-  host: 'https://api.centia.io',
+  host: 'https://api.gc2.io',
   clientId: 'your-client-id',
   username: 'your-username',
   password: process.env.CENTIA_PASSWORD,
@@ -35,12 +35,12 @@ const { data } = await new Sql().exec({
         language: 'json',
         code: `{
   "mcpServers": {
-    "centia-io": {
+    "gc2": {
       "command": "npx",
-      "args": ["-y", "@centia-io/mcp-server"],
+      "args": ["-y", "@mapcentia/gc2-mcp-server"],
       "env": {
         "API_TOKEN": "your-access-token",
-        "API_BASE_URL": "https://api.centia.io"
+        "API_BASE_URL": "https://api.gc2.io"
       }
     }
   }
@@ -74,14 +74,14 @@ LIMIT 10;`,
         code: `# Every layer is served through standard OGC services
 
 # Render a styled map image (WMS GetMap)
-https://api.centia.io/api/v4/ows/schema/parks/database/mydb
+https://api.gc2.io/api/v4/ows/schema/parks/database/mydb
   ?SERVICE=WMS&VERSION=1.1.0&REQUEST=GetMap
   &LAYERS=parks.areas&SRS=EPSG:3857
   &BBOX=1204164,7485240,1259200,7534200
   &WIDTH=1024&HEIGHT=768&FORMAT=image/png
 
 # Fetch the vector features (WFS GetFeature)
-https://api.centia.io/api/v4/wfs/schema/parks/database/mydb
+https://api.gc2.io/api/v4/wfs/schema/parks/database/mydb
   ?SERVICE=WFS&VERSION=1.1.0&REQUEST=GetFeature
   &TYPENAME=areas&SRSNAME=EPSG:4326
 
@@ -92,14 +92,14 @@ https://api.centia.io/api/v4/wfs/schema/parks/database/mydb
         label: 'Self-Host',
         language: 'bash',
         code: `# Self-host the full stack: app, WebSockets, PostGIS and Redis
-git clone https://github.com/centia-io/centia-docker.git
-cd centia-docker
+git clone https://github.com/mapcentia/gc2-docker.git
+cd gc2-docker
 docker compose up --build -d
 
 # Connect with the CLI
-npm install -g @centia-io/cli
-centia connect http://localhost:81
-centia login`,
+npm install -g @mapcentia/gc2-cli
+gc2 connect http://localhost:81
+gc2 login`,
     },
 ];
 

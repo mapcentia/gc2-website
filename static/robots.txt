@@ -3,5 +3,5 @@ Allow: /
 Disallow: /__docusaurus/
 
 # Sitemap location
-Sitemap: https://centia.io/sitemap.xml
-Host: centia.io
+Sitemap: https://gc2.io/sitemap.xml
+Host: gc2.io

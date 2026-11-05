@@ -1,5 +1,5 @@
 import {useEffect, useState, useCallback} from 'react'
-import {Status} from '@centia-io/sdk'
+import {Status} from '@mapcentia/gc2-sdk'
 
 function useAuth() {
     const [isAuth, setIsAuth] = useState(false);

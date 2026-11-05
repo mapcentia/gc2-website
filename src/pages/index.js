@@ -10,7 +10,7 @@ import styles from './index.module.css';
 
 const pageTitle = 'Geospatial BaaS & Infrastructure — Cloud or Self-Hosted';
 const pageDescription =
-    'Build geospatial apps on PostGIS with spatial SQL, realtime APIs, OGC API Features & Maps, WMS/WFS, scheduled imports and GeoParquet snapshots. Use managed Centia Cloud or self-host with Docker.';
+    'Build geospatial apps on PostGIS with spatial SQL, realtime APIs, OGC API Features & Maps, WMS/WFS, scheduled imports and GeoParquet snapshots. Use managed GC2 Cloud or self-host with Docker.';
 
 const formats = ['GeoParquet', 'GeoJSON', 'Shapefile', 'GeoPackage', 'FlatGeobuf', 'CSV', 'GML', 'MapInfo', 'File Geodatabase'];
 
@@ -142,12 +142,12 @@ const useCases = [
 ];
 
 const ogcExample = `# Read a collection as GeoJSON (OGC API Features)
-GET https://api.centia.io/api/v4/ogc/database/mydb/collections/parks.areas/items?limit=10 HTTP/1.1
+GET https://api.gc2.io/api/v4/ogc/database/mydb/collections/parks.areas/items?limit=10 HTTP/1.1
 Accept: application/geo+json
 Authorization: Bearer your-access-token
 
 # Render a styled map image (OGC API Maps)
-GET https://api.centia.io/api/v4/ogc/database/mydb/collections/parks.areas/map?width=1024&f=png HTTP/1.1
+GET https://api.gc2.io/api/v4/ogc/database/mydb/collections/parks.areas/map?width=1024&f=png HTTP/1.1
 Accept: image/png
 Authorization: Bearer your-access-token`;
 
@@ -194,28 +194,28 @@ export default function Home() {
     return (
         <Layout title={pageTitle} description={pageDescription}>
             <Head>
-                <link rel="canonical" href="https://centia.io/" />
-                <meta property="og:title" content={`${pageTitle} | Centia.io`} />
+                <link rel="canonical" href="https://gc2.io/" />
+                <meta property="og:title" content={`${pageTitle} | GC2`} />
                 <meta property="og:description" content={pageDescription} />
-                <meta property="og:image" content="https://centia.io/img/social-card-geospatial.png" />
+                <meta property="og:image" content="https://gc2.io/img/social-card-geospatial.png" />
                 <meta property="og:image:width" content="1200" />
                 <meta property="og:image:height" content="630" />
-                <meta property="og:url" content="https://centia.io/" />
+                <meta property="og:url" content="https://gc2.io/" />
                 <meta property="og:type" content="website" />
                 <meta name="twitter:card" content="summary_large_image" />
-                <meta name="twitter:title" content={`${pageTitle} | Centia.io`} />
+                <meta name="twitter:title" content={`${pageTitle} | GC2`} />
                 <meta name="twitter:description" content={pageDescription} />
-                <meta name="twitter:image" content="https://centia.io/img/social-card-geospatial.png" />
+                <meta name="twitter:image" content="https://gc2.io/img/social-card-geospatial.png" />
                 <script type="application/ld+json">
                     {JSON.stringify({
                         '@context': 'https://schema.org',
                         '@type': 'Organization',
-                        name: 'Centia.io',
-                        url: 'https://centia.io/',
-                        logo: 'https://centia.io/img/centia-logo.svg',
+                        name: 'GC2',
+                        url: 'https://gc2.io/',
+                        logo: 'https://gc2.io/img/gc2-logo.svg',
                         sameAs: [
-                            'https://github.com/centia-io/',
-                            'https://stackoverflow.com/questions/tagged/centia.io'
+                            'https://github.com/mapcentia/',
+                            'https://stackoverflow.com/questions/tagged/gc2'
                         ]
                     })}
                 </script>
@@ -223,11 +223,11 @@ export default function Home() {
                     {JSON.stringify({
                         '@context': 'https://schema.org',
                         '@type': 'SoftwareApplication',
-                        name: 'Centia.io',
+                        name: 'GC2',
                         applicationCategory: 'DeveloperApplication',
                         operatingSystem: 'Web',
                         description: pageDescription,
-                        url: 'https://centia.io/',
+                        url: 'https://gc2.io/',
                         offers: {
                             '@type': 'Offer',
                             price: '0',
@@ -246,10 +246,10 @@ export default function Home() {
                                 The backend for your geospatial applications
                             </Heading>
                             <p className={styles.heroSubtitle}>
-                                From spatial data to working APIs. Centia brings together
+                                From spatial data to working APIs. GC2 (Geo Compute Cloud) brings together
                                 PostGIS, data import, spatial SQL, realtime APIs and OGC map
                                 services in one geospatial backend as a service. Build on
-                                managed <strong>Centia Cloud</strong> or run the platform on
+                                managed <strong>GC2 Cloud</strong> or run the platform on
                                 your own infrastructure with <strong>Docker</strong>.
                             </p>
                             <div className={styles.ctaButtons}>
@@ -260,7 +260,7 @@ export default function Home() {
                                         trackCtaClick('cta_cloud_start_click', {location: 'home_hero'})
                                     }
                                 >
-                                    Start in Centia Cloud
+                                    Start in GC2 Cloud
                                 </Link>
                                 <Link
                                     className="button button--secondary button--lg"
@@ -290,7 +290,7 @@ export default function Home() {
                                 Open source (AGPLv3)
                                 <span aria-hidden="true"> · </span>
                                 <Link
-                                    to="https://github.com/centia-io"
+                                    to="https://github.com/mapcentia"
                                     onClick={() => trackCtaClick('cta_github_click', {location: 'home_hero'})}
                                 >
                                     GitHub
@@ -415,7 +415,7 @@ export default function Home() {
                     <section className={styles.section}>
                         <div className="container">
                             <Heading as="h2" className={styles.sectionTitle}>
-                                What developers build on Centia
+                                What developers build on GC2
                             </Heading>
                             <div className={styles.useCaseGrid}>
                                 {useCases.map((useCase) => (
@@ -436,10 +436,10 @@ export default function Home() {
                             <div className={styles.deploymentGrid}>
                                 <div className={styles.deploymentCard}>
                                     <p className={styles.kicker}>Managed geospatial BaaS</p>
-                                    <Heading as="h3">Build on Centia Cloud</Heading>
+                                    <Heading as="h3">Build on GC2 Cloud</Heading>
                                     <p>
                                         Start with a managed PostGIS backend. Import your data
-                                        and connect your apps and GIS tools while Centia handles
+                                        and connect your apps and GIS tools while GC2 handles
                                         the infrastructure.
                                     </p>
                                     <ul>
@@ -452,7 +452,7 @@ export default function Home() {
                                         to="/console"
                                         onClick={() => trackCtaClick('cta_cloud_start_click', {location: 'home_deployment'})}
                                     >
-                                        Start in Centia Cloud
+                                        Start in GC2 Cloud
                                     </Link>
                                 </div>
                                 <div className={styles.deploymentCard}>
@@ -495,7 +495,7 @@ export default function Home() {
                                         trackCtaClick('cta_cloud_start_click', {location: 'home_bottom'})
                                     }
                                 >
-                                    Start in Centia Cloud
+                                    Start in GC2 Cloud
                                 </Link>
                                 <Link
                                     className={clsx('button', 'button--lg', styles.ctaGhost)}

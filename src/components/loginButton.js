@@ -1,4 +1,4 @@
-import {CodeFlow} from '@centia-io/sdk'
+import {CodeFlow} from '@mapcentia/gc2-sdk'
 import {useEffect, useMemo} from "react";
 import styles from "./consoleWidgets.module.css";
 
@@ -9,14 +9,14 @@ function LoginButton(props) {
 
     if (process.env.NODE_ENV === 'production') {
         options = {
-            redirectUri: 'https://centia.io/console/',
-            clientId: 'centia',
-            host: 'https://api.centia.io',
+            redirectUri: 'https://gc2.io/console/',
+            clientId: 'gc2',
+            host: 'https://api.gc2.io',
         }
     } else {
         options = {
             redirectUri: 'http://localhost:4000/console/',
-            clientId: 'centia',
+            clientId: 'gc2',
             host: 'http://localhost:8080',
         }
     }
@@ -64,7 +64,7 @@ function LoginButton(props) {
         if (process.env.NODE_ENV === 'production') {
             return (
                 <div className={styles.actions}>
-                    <a className="button button--primary" href="https://api.centia.io/signup?redirect_uri=https://centia.io/console?r">Sign
+                    <a className="button button--primary" href="https://api.gc2.io/signup?redirect_uri=https://gc2.io/console?r">Sign
                         up for
                         an account</a>
                     <span className={styles.muted}>or</span>

@@ -1,4 +1,4 @@
-import {Claims, Status} from '@centia-io/sdk'
+import {Claims, Status} from '@mapcentia/gc2-sdk'
 import {useRef, useState} from 'react'
 import styles from './consoleWidgets.module.css'
 

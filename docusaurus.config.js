@@ -24,12 +24,12 @@ const config = {
 
     customFields: {stripeLinks, webAppUrl},
 
-    title: 'Centia.io',
-    tagline: 'Geospatial BaaS and infrastructure — managed PostGIS in the cloud or self-hosted with Docker',
-    favicon: 'img/centia-logo.svg',
+    title: 'GC2',
+    tagline: 'Geo Compute Cloud — managed PostGIS in the cloud or self-hosted with Docker',
+    favicon: 'img/gc2-logo.svg',
 
     // Set the production url of your site here
-    url: 'https://centia.io',
+    url: 'https://gc2.io',
     // Set the /<baseUrl>/ pathname under which your site is served
     // For GitHub pages deployment, it is often '/<projectName>/'
     baseUrl: '/',
@@ -38,8 +38,8 @@ const config = {
 
     // GitHub pages deployment config.
     // If you aren't using GitHub pages, you don't need these.
-    organizationName: 'centia-io', // Usually your GitHub org/user name.
-    projectName: 'centia-io', // Usually your repo name.
+    organizationName: 'mapcentia', // Usually your GitHub org/user name.
+    projectName: 'website', // Usually your repo name.
 
     onBrokenLinks: 'throw',
     markdown: {
@@ -90,7 +90,7 @@ const config = {
                     sidebarPath: './sidebars.js',
                     // Please change this to your repo.
                     // Remove this to remove the "edit this page" links.
-                    editUrl: 'https://github.com/centia-io/website/tree/main/',
+                    editUrl: 'https://github.com/mapcentia/website/tree/main/',
                 },
                 blog: {
                     showReadingTime: true,
@@ -101,7 +101,7 @@ const config = {
                     // Please change this to your repo.
                     // Remove this to remove the "edit this page" links.
                     editUrl:
-                        'https://github.com/centia-io/website/tree/main',
+                        'https://github.com/mapcentia/website/tree/main',
                     // Useful options to enforce blogging best practices
                     onInlineTags: 'warn',
                     onInlineAuthors: 'warn',
@@ -135,18 +135,18 @@ const config = {
             metadata: [
                 {
                     name: 'description',
-                    content: 'Centia.io is a geospatial BaaS and infrastructure platform with PostGIS, data import, spatial SQL, realtime APIs and OGC WMS/WFS. Use managed cloud or self-host with Docker.'
+                    content: 'GC2 (Geo Compute Cloud) is a geospatial BaaS and infrastructure platform with PostGIS, data import, spatial SQL, realtime APIs and OGC WMS/WFS. Use managed cloud or self-host with Docker.'
                 },
                 {property: 'og:type', content: 'website'},
-                {property: 'og:site_name', content: 'Centia.io'},
+                {property: 'og:site_name', content: 'GC2'},
                 {name: 'twitter:card', content: 'summary_large_image'},
             ],
             navbar: {
-                title: 'Centia.io',
+                title: 'GC2',
                 logo: {
-                    alt: 'Centia logo',
-                    src: 'img/centia-logo.svg',
-                    srcDark: 'img/centia-logo-dark.svg',
+                    alt: 'GC2 logo',
+                    src: 'img/gc2-logo.svg',
+                    srcDark: 'img/gc2-logo-dark.svg',
                 },
                 items: [
                     {to: 'console', label: 'Console', position: 'left'},
@@ -158,7 +158,7 @@ const config = {
                         label: 'Docs',
                     },
                     {
-                        href: 'https://api.centia.io/swagger-ui/index.html',
+                        href: 'https://api.gc2.io/swagger-ui/index.html',
                         label: 'Open API',
                         position: 'left',
                     },
@@ -181,7 +181,7 @@ const config = {
                         items: [
                             {
                                 label: 'Stack Overflow',
-                                href: 'https://stackoverflow.com/questions/tagged/centia.io',
+                                href: 'https://stackoverflow.com/questions/tagged/gc2',
                             },
                         ],
                     },
@@ -190,7 +190,7 @@ const config = {
                         items: [
                             {
                                 label: 'GitHub',
-                                href: 'https://github.com/centia-io/',
+                                href: 'https://github.com/mapcentia/',
                             },
                         ],
                     }, {
@@ -203,7 +203,7 @@ const config = {
                         ],
                     },
                 ],
-                copyright: `Copyright © ${new Date().getFullYear()} Centia.io`,
+                copyright: `Copyright © ${new Date().getFullYear()} MapCentia`,
             },
             prism: {
                 theme: prismThemes.github,

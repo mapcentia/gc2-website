@@ -1,5 +1,5 @@
 import {useQuery} from '@tanstack/react-query'
-import {Stats} from '@centia-io/sdk'
+import {Stats} from '@mapcentia/gc2-sdk'
 
 function useStats() {
     return useQuery({

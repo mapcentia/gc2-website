@@ -1,16 +1,16 @@
 ---
 title: Frequently asked questions (FAQ)
-description: Answers to common questions about Centia.io — what it is, how to get started, pricing and limits, realtime, OAuth, and more.
+description: Answers to common questions about GC2 (Geo Compute Cloud) — what it is, how to get started, pricing and limits, realtime, OAuth, and more.
 ---
 
 # Frequently asked questions
 
-Welcome! This page answers common questions about Centia.io and points you to the right docs to go deeper.
+Welcome! This page answers common questions about GC2 and points you to the right docs to go deeper.
 
 <details>
-  <summary>What is Centia.io?</summary>
+  <summary>What is GC2?</summary>
   <div>
-    Centia.io is a geospatial Backend as a Service (BaaS) and infrastructure platform built on PostgreSQL and PostGIS. Import spatial data, query it with spatial SQL or GraphQL, and connect maps and GIS tools through realtime APIs and OGC WMS/WFS services. Use managed Centia Cloud or self-host with Docker, with authentication and developer tooling included.
+    GC2 (Geo Compute Cloud) is a geospatial Backend as a Service (BaaS) and infrastructure platform built on PostgreSQL and PostGIS. Import spatial data, query it with spatial SQL or GraphQL, and connect maps and GIS tools through realtime APIs and OGC WMS/WFS services. Use managed GC2 Cloud or self-host with Docker, with authentication and developer tooling included.
   </div>
 </details>
 
@@ -18,16 +18,16 @@ Welcome! This page answers common questions about Centia.io and points you to th
   <summary>How do I get started?</summary>
   <div>
     1) Choose deployment model:
-    <br/>- Managed cloud on Centia.io: <a href="/console">/console</a>
+    <br/>- Managed cloud on gc2.io: <a href="/console">/console</a>
     <br/>- Self-host with Docker: <a href="/docs/opensource">/docs/opensource</a>
     <br/>2) Follow Getting started to model your first schema and table: <a href="/docs/start">/docs/start</a>
   </div>
 </details>
 
 <details>
-  <summary>Should I use Centia Cloud or self-host?</summary>
+  <summary>Should I use GC2 Cloud or self-host?</summary>
   <div>
-    Choose Centia Cloud if you want the fastest path to production and managed operations. Choose self-hosting if you need infrastructure control, custom networking, or strict compliance constraints.
+    Choose GC2 Cloud if you want the fastest path to production and managed operations. Choose self-hosting if you need infrastructure control, custom networking, or strict compliance constraints.
     Start cloud here: <a href="/console">/console</a> and self-host here: <a href="/docs/opensource">/docs/opensource</a>.
   </div>
 </details>
@@ -36,10 +36,10 @@ Welcome! This page answers common questions about Centia.io and points you to th
   <summary>How do I model my data?</summary>
   <div>
     Use the CLI to define schemas, tables, columns, and constraints. For example:
-    <pre><code>centia schema add "app"
-centia table add "app" "users"
-centia column add "app" "users" "id" int
-centia constraint add "app" "users" "id" primary</code></pre>
+    <pre><code>gc2 schema add "app"
+gc2 table add "app" "users"
+gc2 column add "app" "users" "id" int
+gc2 constraint add "app" "users" "id" primary</code></pre>
     See the full walkthrough: <a href="/docs/start">/docs/start</a>
   </div>
 </details>
@@ -52,7 +52,7 @@ centia constraint add "app" "users" "id" primary</code></pre>
 </details>
 
 <details>
-  <summary>Does Centia support realtime updates?</summary>
+  <summary>Does GC2 support realtime updates?</summary>
   <div>
     Yes. Subscribe to data changes to keep web maps, field data and spatial dashboards up to date. Learn more: <a href="/docs/realtime">/docs/realtime</a>
   </div>
@@ -61,7 +61,7 @@ centia constraint add "app" "users" "id" primary</code></pre>
 <details>
   <summary>How does authentication work?</summary>
   <div>
-    Centia supports OAuth so you can authenticate users and integrate identity providers. Overview: <a href="/docs/oauth">/docs/oauth</a>
+    GC2 supports OAuth so you can authenticate users and integrate identity providers. Overview: <a href="/docs/oauth">/docs/oauth</a>
   </div>
 </details>
 
@@ -80,21 +80,21 @@ centia constraint add "app" "users" "id" primary</code></pre>
 </details>
 
 <details>
-  <summary>Is Centia open source or can I contribute?</summary>
+  <summary>Is GC2 open source or can I contribute?</summary>
   <div>
-    Centia focuses on open, developer‑first tooling and familiar SQL workflows. Learn more on the Open source page: <a href="/docs/opensource">/docs/opensource</a>
+    GC2 focuses on open, developer‑first tooling and familiar SQL workflows. Learn more on the Open source page: <a href="/docs/opensource">/docs/opensource</a>
   </div>
 </details>
 
 <details>
-  <summary>How is Centia different from other BaaS platforms?</summary>
+  <summary>How is GC2 different from other BaaS platforms?</summary>
   <div>
-    Centia lets you model data explicitly (schemas, tables, columns) and query with standard SQL, adds realtime where you need it, and provides OAuth and file storage out of the box. Check the Intro for a quick overview: <a href="/docs/intro">/docs/intro</a>
+    GC2 lets you model data explicitly (schemas, tables, columns) and query with standard SQL, adds realtime where you need it, and provides OAuth and file storage out of the box. Check the Intro for a quick overview: <a href="/docs/intro">/docs/intro</a>
   </div>
 </details>
 
 <details>
-  <summary>Can I migrate in or out of Centia?</summary>
+  <summary>Can I migrate in or out of GC2?</summary>
   <div>
     Your data model is defined with familiar SQL concepts, and you can interact via SQL and SDKs. This makes it straightforward to import seed data during setup and to export data later using the CLI and SQL queries.
   </div>

@@ -1,5 +1,5 @@
 import {useState} from 'react'
-import {Claims} from '@centia-io/sdk'
+import {Claims} from '@mapcentia/gc2-sdk'
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext'
 
 import {useUser} from '../hooks/user'
@@ -62,7 +62,7 @@ function StripePricingTable(props) {
     const [yearly, setYearly] = useState(false)
 
     const apiHost = process.env.NODE_ENV === 'production'
-        ? 'https://api.centia.io'
+        ? 'https://api.gc2.io'
         : 'http://localhost:8080'
 
     let uid
