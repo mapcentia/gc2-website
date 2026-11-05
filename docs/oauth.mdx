@@ -364,7 +364,7 @@ The token carries the same rights as the default user — nothing more.
 
 ### Using the SDK
 
-The [SDK](./sdk) (0.2.14+) wraps the endpoint in the `GuestFlow` class. After `signIn()`, the tokens are stored and all subsequent SDK calls (`Sql`, `Rpc`, `Gql`, ...) are authenticated as the default user, with automatic refresh:
+The [SDK](./sdk) (0.3.0+) wraps the endpoint in the `GuestFlow` class. After `signIn()`, the tokens are stored and all subsequent SDK calls (`Sql`, `Rpc`, `Gql`, ...) are authenticated as the default user, with automatic refresh:
 
 ```ts
 import { GuestFlow } from "@mapcentia/gc2-sdk";

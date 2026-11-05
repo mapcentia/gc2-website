@@ -221,7 +221,7 @@ If no rows match, the response is `404` (`FEATURE_NOT_FOUND`). `PUT` is not supp
 
 ## Using the SDK
 
-The [`@mapcentia/gc2-sdk`](./sdk.mdx) (0.2.11+) exposes the API through the `Features` class. The GeoJSON types `GeoJsonFeature<P>`, `GeoJsonFeatureCollection<P>` and `GeoJsonGeometry` are exported, with `P` typing the feature properties. Errors are thrown as `CentiaApiError` with `.status` and `.code`:
+The [`@mapcentia/gc2-sdk`](./sdk.mdx) (0.3.0+) exposes the API through the `Features` class. The GeoJSON types `GeoJsonFeature<P>`, `GeoJsonFeatureCollection<P>` and `GeoJsonGeometry` are exported, with `P` typing the feature properties. Errors are thrown as `CentiaApiError` with `.status` and `.code`:
 
 ```ts
 import { createCentiaClient, Features } from '@mapcentia/gc2-sdk'
@@ -249,7 +249,7 @@ await features.patchFeature('rockhall', 'venues', {
   properties: { city: 'Los Angeles' },
 }, { feature: 1 })
 
-// Delete (204) — a list of keys deletes several rows at once (0.2.12+)
+// Delete (204) — a list of keys deletes several rows at once
 await features.deleteFeature('rockhall', 'venues', 1)
 await features.deleteFeature('rockhall', 'venues', [2, 3])
 ```

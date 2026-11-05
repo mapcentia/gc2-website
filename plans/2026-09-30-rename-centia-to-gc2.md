@@ -33,19 +33,19 @@
 
 ## Fase 1: Forudsætninger
 
-### Opgave 1.1: DNS og certifikat for api.gc2.io og www.gc2.io
+### Opgave 1.1: DNS og certifikat for api.gc2.io, event.gc2.io og www.gc2.io
 
 **Files:** ingen i repos; AWS Route 53, ACM og ALB for cluster `centia-io`.
 
 - [ ] **Step 1:** Opret ACM-certifikat i eu-west-1 for `gc2.io`, `*.gc2.io`. Validér via DNS.
-- [ ] **Step 2:** Opret Route 53-records: `api.gc2.io` som alias til den ALB der i dag betjener `api.centia.io`; `www.gc2.io` og `gc2.io` til det der hoster websitet (samme mål som `centia.io`).
-- [ ] **Step 3:** Tilføj certifikatet til ALB'ens HTTPS-listener, og tilføj en listener-regel `Host: api.gc2.io` → samme target group som `api.centia.io`.
+- [ ] **Step 2:** Opret Route 53-records: `api.gc2.io` som alias til den ALB der i dag betjener `api.centia.io`; `event.gc2.io` som alias til det der i dag betjener `event.centia.io` (WebSocket/realtime — docs, skills og admin-appens `VITE_GC2_WS_HOST` peger derhen); `www.gc2.io` og `gc2.io` til det der hoster websitet (samme mål som `centia.io`).
+- [ ] **Step 3:** Tilføj certifikatet til ALB'ens HTTPS-listener, og tilføj listener-regler `Host: api.gc2.io` → samme target group som `api.centia.io` og `Host: event.gc2.io` → samme target group som `event.centia.io`.
 - [ ] **Step 4: Verificér**
 
 ```bash
 curl -sS -o /dev/null -w "%{http_code}\n" https://api.gc2.io/api/v4/oauth
 ```
-Expected: `4xx` (ikke connection error, ikke cert-fejl). `getent hosts api.gc2.io` giver en IP.
+Expected: `4xx` (ikke connection error, ikke cert-fejl). `getent hosts api.gc2.io` og `getent hosts event.gc2.io` giver en IP; `curl -sS https://event.gc2.io/ping` svarer `pong`.
 
 ### Opgave 1.2: OAuth-client `gc2`
 

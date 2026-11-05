@@ -153,7 +153,7 @@ The per-layer access model is the same as for WMS/WFS: anonymous callers read la
 
 ## Using the SDK
 
-The [`@mapcentia/gc2-sdk`](../sdk.mdx) (0.2.13+) wraps the API in the `Ogc` class. Feature properties can be typed, CRS URIs are built with the exported `OGC_CRS84` constant and `ogcEpsgCrs()` helper, and errors are thrown as `CentiaApiError` with `.status` and `.code`. Map images are fetched by URL — use `mapUrl`/`datasetMapUrl` to build URLs for `<img>` tags or map libraries:
+The [`@mapcentia/gc2-sdk`](../sdk.mdx) (0.3.0+) wraps the API in the `Ogc` class. Feature properties can be typed, CRS URIs are built with the exported `OGC_CRS84` constant and `ogcEpsgCrs()` helper, and errors are thrown as `CentiaApiError` with `.status` and `.code`. Map images are fetched by URL — use `mapUrl`/`datasetMapUrl` to build URLs for `<img>` tags or map libraries:
 
 ```ts
 import { createCentiaClient, Ogc, OGC_CRS84, ogcEpsgCrs } from '@mapcentia/gc2-sdk'

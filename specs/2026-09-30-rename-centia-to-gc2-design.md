@@ -25,6 +25,7 @@ re-eksporterer den nye pakke og markeres deprecated.
 |---|---|---|
 | Web og docs | centia.io | gc2.io |
 | API | api.centia.io | api.gc2.io |
+| Realtime (WebSocket) | event.centia.io | event.gc2.io |
 | SDK | `@centia-io/sdk` 0.2.25 (repo gc2-js-client; ældre linje `@mapcentia/gc2-js-client` 0.0.25) | `@mapcentia/gc2-sdk` |
 | CLI | `@centia-io/cli` 2026.6.1, bin `centia` | `@mapcentia/gc2-cli` (findes allerede på npm, samme version), bin `gc2` |
 | MCP-server | `@centia-io/mcp-server` 1.0.33, toolprefix `mcp__centia__` | `@mapcentia/gc2-mcp-server`, prefix `mcp__gc2__` |
@@ -61,7 +62,7 @@ Fase 4, 5 og 6 kan køre parallelt efter fase 3, bortset fra at fase 6 kræver f
 
 ### 1. Forudsætninger (ingen kodeændringer)
 
-- DNS: `api.gc2.io` og `www.gc2.io`. Certifikater for begge.
+- DNS: `api.gc2.io`, `event.gc2.io` og `www.gc2.io`. Certifikater for alle tre.
 - OAuth: opret client `gc2` med redirect `https://gc2.io/console/` i geocloud2 ved siden
   af den eksisterende `centia`-client. Begge lever til fase 8.
 - GitHub: flyt website, mcp-server, centia-app, centia-docker og danish-search fra
