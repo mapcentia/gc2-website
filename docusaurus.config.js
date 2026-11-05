@@ -39,7 +39,7 @@ const config = {
     // GitHub pages deployment config.
     // If you aren't using GitHub pages, you don't need these.
     organizationName: 'mapcentia', // Usually your GitHub org/user name.
-    projectName: 'website', // Usually your repo name.
+    projectName: 'gc2-website', // Usually your repo name.
 
     onBrokenLinks: 'throw',
     markdown: {
@@ -90,7 +90,7 @@ const config = {
                     sidebarPath: './sidebars.js',
                     // Please change this to your repo.
                     // Remove this to remove the "edit this page" links.
-                    editUrl: 'https://github.com/mapcentia/website/tree/main/',
+                    editUrl: 'https://github.com/mapcentia/gc2-website/tree/main/',
                 },
                 blog: {
                     showReadingTime: true,
@@ -101,7 +101,7 @@ const config = {
                     // Please change this to your repo.
                     // Remove this to remove the "edit this page" links.
                     editUrl:
-                        'https://github.com/mapcentia/website/tree/main',
+                        'https://github.com/mapcentia/gc2-website/tree/main',
                     // Useful options to enforce blogging best practices
                     onInlineTags: 'warn',
                     onInlineAuthors: 'warn',
