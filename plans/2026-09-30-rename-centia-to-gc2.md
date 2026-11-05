@@ -26,7 +26,7 @@
 1. En bruger med `@centia-io/sdk@^0.2` installeret får 0.2.26 ved næste install og skal stadig kunne importere `PasswordFlow`, `Sql`, `CodeFlow`, `GuestFlow`, `Claims`, `Status` og subpath `./node`. Test i opgave 3.5.
 2. En bruger der kører `centia login` efter opdatering skal få en advarsel og stadig logge ind, ikke "command not found". Test i opgave 4.3.
 3. Et Claude Code-projekt med MCP-config `"args": ["-y", "@centia-io/mcp-server"]` skal stadig starte serveren og se tools med det gamle prefix, indtil brugeren skifter. Test i opgave 5.4.
-4. En browserklient med refresh-token udstedt af client `centia` mod `api.centia.io` skal kunne forny efter fase 8's 301, fordi refresh-kaldet følger redirect. Test i opgave 8.2.
+4. En browserklient med refresh-token udstedt af client `centia` mod `api.centia.io` skal kunne forny i hele overgangsperioden; derfor forwardes API-hosten i stedet for at redirecte (ALB kan kun 301/302). Test i opgave 8.2.
 5. Docs-eksempler i `docs/**/*.mdx` må ikke indeholde `centia.io` eller `@centia-io` efter fase 7; en glemt URL sender brugere til et domæne der senere lukker. Test i opgave 7.4.
 
 ---
