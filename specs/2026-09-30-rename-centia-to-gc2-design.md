@@ -9,8 +9,8 @@ Produktet Centia omdøbes til GC2, der står for **Geo Compute Cloud**. Det omfa
 CLI-binary, OAuth-client, MCP-toolprefix, Claude-skills og brandtekst i docs og UI.
 Firmaet hedder fortsat MapCentia, og npm-scope'et er `@mapcentia`.
 
-Eksisterende brugere må ikke brydes: centia.io redirecter til gc2.io i en
-overgangsperiode, og de gamle `@centia-io`-pakker får en sidste version der
+Eksisterende brugere må ikke brydes: centia.io redirecter til gc2.io, og api.centia.io
+forwardes uændret (ALB kan kun 301/302, som ødelægger POST) i en overgangsperiode, og de gamle `@centia-io`-pakker får en sidste version der
 re-eksporterer den nye pakke og markeres deprecated.
 
 ## Ikke-mål

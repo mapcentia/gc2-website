@@ -400,21 +400,22 @@ Expected: tom.
 
 ## Fase 8: Cutover og oprydning
 
-### Opgave 8.1: 301 fra centia.io og api.centia.io
+### Opgave 8.1: 301 fra centia.io; api.centia.io forwardes uændret
 
-**Files:** ALB-listener-regler / website-hosting.
+**Files:** `static/_redirects` (Netlify); ingen ALB-ændring.
 
-- [ ] **Step 1:** ALB: regel `Host: api.centia.io` → redirect `https://api.gc2.io/#{path}?#{query}` med 301, placeret over target-reglen.
-- [ ] **Step 2:** Website-hosting for centia.io → redirect til `https://gc2.io/#{path}` 301.
-- [ ] **Step 3: Test** `curl -sI https://api.centia.io/api/v4/oauth | grep -i "^HTTP\|^location"` → `301`, `location: https://api.gc2.io/api/v4/oauth`. Samme for `https://centia.io/docs/intro`.
+ALB redirect-actions kan kun 301/302. Begge får `fetch` til at gentage et POST som GET uden body, så token-exchange og refresh fra klienter med `host: api.centia.io` ville fejle. Derfor redirectes API'et ikke: ALB'en forwarder `api.centia.io` og `event.centia.io` til samme target groups som de nye hosts i hele overgangsperioden, og reglerne fjernes først i 8.3.
 
-### Opgave 8.2: Bekræft token-fornyelse over redirect
+- [x] **Step 1:** `static/_redirects` i website-repoet: `https://centia.io/* https://gc2.io/:splat 301!` og samme for `www.centia.io` (begge domæner er aliaser på samme Netlify-site, derfor host-scoped). Committet som 1ca7484.
+- [ ] **Step 2: Test** `curl -sI https://centia.io/docs/intro | grep -i "^HTTP\|^location"` → `301`, `location: https://gc2.io/docs/intro`. Og `curl -sS -o /dev/null -w "%{http_code}" https://api.centia.io/api/v4/oauth` → `406` (ingen redirect).
 
-- [ ] **Step 1:** Med en browser-klient der stadig bruger `@centia-io/sdk@0.2.25` og `host: https://api.centia.io`: log ind, vent til access-token udløber (eller kald refresh eksplicit), og bekræft at fornyelsen lykkes. Fetch følger 301 og POST bliver til GET ved 301, så hvis refresh fejler, skift ALB-reglen til 308 (bevarer metode og body).
+### Opgave 8.2: Bekræft at gamle klienter stadig virker mod api.centia.io
+
+- [ ] **Step 1:** Med `@centia-io/sdk@0.2.27` (ikke shimmen) og `host: https://api.centia.io`: log ind med client `centia` og kald refresh. Expected: begge lykkes, og svarets `_links`/OGC-links peger på `api.centia.io`.
 - [ ] **Step 2:** Notér resultatet i spec'ens risikoafsnit.
 
 ### Opgave 8.3: Deprecate resten og ryd op
 
 - [ ] **Step 1:** `for p in agent-ui agent-protocol agent-server; do npm deprecate @centia-io/$p "Renamed to @mapcentia/gc2-$p"; done`.
-- [ ] **Step 2:** Efter overgangsperioden (forslag: 3 måneder): slet OAuth-client `centia` (`DELETE /api/v4/clients/centia`), fjern `bin/run-centia` og `centia`-bin fra gc2-cli-profilen, fjern ALB-target-reglen for `api.centia.io` (redirecten bliver), slet `static/img/centia-logo*.svg`, slet ECS-services `centia-http-service`/`centia-event-service`.
+- [ ] **Step 2:** Efter overgangsperioden (forslag: 3 måneder): slet OAuth-client `centia` (`DELETE /api/v4/clients/centia`), fjern `bin/run-centia` og `centia`-bin fra gc2-cli-profilen, fjern ALB-reglerne for `api.centia.io` og `event.centia.io` (ingen redirect; gamle klienter skal være migreret), slet `static/img/centia-logo*.svg`, slet ECS-services `centia-http-service`/`centia-event-service`.
 - [ ] **Step 3:** Opdater `specs/2026-09-30-rename-centia-to-gc2-design.md` status til "gennemført".
