@@ -1,0 +1,4 @@
+# Phase 8 of the GC2 rename: the old domain redirects to gc2.io.
+# Both domains are aliases of the same Netlify site, so the rule must be host-scoped.
+https://centia.io/* https://gc2.io/:splat 301!
+https://www.centia.io/* https://gc2.io/:splat 301!
