@@ -1,6 +1,6 @@
 ---
 title: SQL
-description: Run parameterized SELECT, INSERT, UPDATE, DELETE and MERGE statements against your Centia.io database over HTTP or WebSocket, with typed parameters and output formats.
+description: Run parameterized SELECT, INSERT, UPDATE, DELETE and MERGE statements against your GC2 database over HTTP or WebSocket, with typed parameters and output formats.
 sidebar_position: 50
 ---
 
@@ -9,7 +9,7 @@ import TabItem from '@theme/TabItem';
 
 # SQL
 
-The SQL API runs SQL directly against your Centia.io database over HTTP or a WebSocket. You send the statement text with named, typed parameters and get the result back as JSON, CSV or another [output format](#output-formats). It is the most direct way to read and write data when you want full PostgreSQL and PostGIS expressiveness without defining a method or a GraphQL query first.
+The SQL API runs SQL directly against your GC2 (Geo Compute Cloud) database over HTTP or a WebSocket. You send the statement text with named, typed parameters and get the result back as JSON, CSV or another [output format](#output-formats). It is the most direct way to read and write data when you want full PostgreSQL and PostGIS expressiveness without defining a method or a GraphQL query first.
 
 Only data statements are accepted: `select`, `insert`, `update`, `delete` and `merge`. Schema changes go through the [Schema](./schema/schemas.mdx), [Table](./schema/tables.mdx) and [Column](./schema/columns.mdx) APIs instead. Every statement is checked against the caller's [privileges](./privileges.mdx) and rewritten by any matching [rules](./rules.mdx), so sub-users only reach the rows they are allowed to. When the same query is run repeatedly from client code, consider wrapping it in a [method](./methods.mdx) so the SQL stays on the server.
 
@@ -17,7 +17,7 @@ Only `select`, `insert`, `update`, `delete` and `merge` statements can be execut
 
 The Web App includes a built-in SQL editor where you can write and execute queries directly in the browser.
 
-![SQL editor in the Centia Web App](/img/screenshots/webapp-placeholder.svg)
+![SQL editor in the GC2 Web App](/img/screenshots/webapp-placeholder.svg)
 
 Send an HTTP POST to the SQL endpoint with a JSON body:
 - `q`: the SQL text. Use named parameters like `:name` with explicit casts (e.g., `:id::int`).
@@ -35,7 +35,7 @@ See also: [Types](./types) for data type formatting/conversion and [Rules](./rul
 
 The REST API is used like this:
 ```http request
-POST  https://api.centia.io/api/v4/sql
+POST  https://api.gc2.io/api/v4/sql
 Content-Type: application/json
 Accept: application/json; charset=utf-8
 Authorization: Bearer abc123
@@ -50,7 +50,7 @@ Authorization: Bearer abc123
 
 And the websocket API is used like this:
 ```javascript
-const socket = new WebSocket("wss://event.centia.io?token=abc123");
+const socket = new WebSocket("wss://event.gc2.io?token=abc123");
 socket.onopen = () => {
     socket.send(JSON.stringify({
         "q": "...",
@@ -252,7 +252,7 @@ The [SDK](./sdk) wraps the SQL API in the `Sql` class:
 
 - Class: `new Sql()`
 - Method: `exec(request: SqlRequest): Promise<SqlResponse>`
-- Endpoint: `POST https://api.centia.io/api/v4/sql`
+- Endpoint: `POST https://api.gc2.io/api/v4/sql`
 
 Types (simplified):
 - `SqlRequest` has:
@@ -265,7 +265,7 @@ Types (simplified):
     - `data`: an array of rows (records)
 
 ```ts
-import { Sql } from "@centia-io/sdk";
+import { Sql } from "@mapcentia/gc2-sdk";
 
 const sql = new Sql();
 
@@ -289,7 +289,7 @@ console.log(res.data);   // [{ a: 1, b: 'hello', c: '3.14', d: ['x','y'], e: {ne
 
 Typing the rows:
 ```ts
-import type { PgTypes } from "@centia-io/sdk";
+import type { PgTypes } from "@mapcentia/gc2-sdk";
 
 interface Row extends PgTypes.DataRow {
   a: number;
@@ -313,13 +313,13 @@ Build strongly typed SQL requests from a DB schema so you don't write raw SQL.
 - Produces an object with `toSql(): SqlRequest` which you pass to `new Sql().exec()`
 
 ```ts
-import { createSqlBuilder, Sql } from "@centia-io/sdk";
-import type { DBSchema, RowOfSelect } from "@centia-io/sdk";
+import { createSqlBuilder, Sql } from "@mapcentia/gc2-sdk";
+import type { DBSchema, RowOfSelect } from "@mapcentia/gc2-sdk";
 
 // Minimal schema.
 // Don't write this by hand.
-// You can get the schema from the Sql endpoint: https://api.centia.io/api/v4/sql/schema
-// or use the CLI tool: centia schema get public --raw
+// You can get the schema from the Sql endpoint: https://api.gc2.io/api/v4/sql/schema
+// or use the CLI tool: gc2 schema get public --raw
 const schema =
     {
         "name": "public",
@@ -400,8 +400,8 @@ The builder automatically adds `type_hints` for all parameters (e.g., `int4[]`).
 
 ## CLI
 
-You can also use the `centia sql` command to execute statement strings.
+You can also use the `gc2 sql` command to execute statement strings.
 
 ```bash title="Insert a row"
-echo "insert into rockhall.inductees (id, name) values (4, 'Aerosmith') returning id, name" | centia sql
+echo "insert into rockhall.inductees (id, name) values (4, 'Aerosmith') returning id, name" | gc2 sql
 ```

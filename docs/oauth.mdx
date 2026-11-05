@@ -1,6 +1,6 @@
 ---
 title: OAuth
-description: How to use OAuth with Centia.io. Password, Authorization Code (PKCE), and Device flows with examples and best practices.
+description: How to use OAuth with GC2. Password, Authorization Code (PKCE), and Device flows with examples and best practices.
 sidebar_position: 20
 ---
 
@@ -9,11 +9,11 @@ import TabItem from '@theme/TabItem';
 
 # OAuth
 OAuth is an industry-standard protocol for authorization. It enables applications ([clients](./clients)) to
-obtain limited access to user accounts on Centia.io, without sharing the user’s credentials
+obtain limited access to user accounts on GC2 (Geo Compute Cloud), without sharing the user’s credentials
 directly with the client. OAuth accomplishes this by providing a secure, delegated access flow that grants tokens to
 client applications.
 
-Within Centia.io, we implement three main OAuth flows, each suited for different use cases:
+Within GC2, we implement three main OAuth flows, each suited for different use cases:
 
 1. Password Flow
 2. Authorization Code Flow
@@ -27,7 +27,7 @@ Below is an outline of how to use each flow and when to choose one over another.
 ### Overview
 
 The Password Flow is the most direct OAuth flow. In this flow, the client application directly collects the user’s
-credentials (username and password) and exchanges them with Centia.io for an access token.
+credentials (username and password) and exchanges them with GC2 for an access token.
 
 Use cases:
 
@@ -45,10 +45,10 @@ used when other flows are not feasible.
 ### Flow Steps
 
 1. Collect user credentials: Your application collects the username and password from the user securely.
-2. Send token request: The client application sends a POST request to Centia.io OAuth token endpoint:
+2. Send token request: The client application sends a POST request to GC2 OAuth token endpoint:
 
 ```http
-POST https://api.centia.io/api/v4/oauth
+POST https://api.gc2.io/api/v4/oauth
 Accept: application/json
 Content-Type: application/json
 
@@ -87,17 +87,17 @@ Authorization: Bearer eyJhbGciOiJIUzI1...
 The [SDK](./sdk) implements the Password Flow with the `PasswordFlow` class. Use it only in trusted environments — the user's credentials are exchanged directly for tokens, which are then stored and refreshed automatically for subsequent SDK calls.
 
 Required options:
-- `host`: Base URL of your Centia.io instance, e.g. `https://api.centia.io`
-- `clientId`: OAuth client id configured in Centia.io
+- `host`: Base URL of your GC2 instance, e.g. `https://api.gc2.io`
+- `clientId`: OAuth client id configured in GC2
 - `username`
 - `password`
 - `database`: The database to connect to. For a super user, this is the same as the username.
 
 ```ts title="Node.js"
-import { PasswordFlow } from "@centia-io/sdk";
+import { PasswordFlow } from "@mapcentia/gc2-sdk";
 
 const flow = new PasswordFlow({
-  host: "https://api.centia.io",
+  host: "https://api.gc2.io",
   clientId: "your-client-id",
   username: "your-username",
   password: "your-password",
@@ -122,7 +122,7 @@ Use cases:
 
 - Web or native applications that can securely manage client secrets or use PKCE for enhanced security.
 - Situations where you want to avoid collecting user credentials in the application and
-instead rely on a redirect to Centia.io login page.
+instead rely on a redirect to GC2 login page.
 - Multi-tenant or third-party applications that must not handle user credentials directly.
 
 Security considerations:
@@ -138,10 +138,10 @@ At the moment, PKCE is mandatory for both public and confidential clients in the
 
 ### Flow Steps
 
-1. User initiates login: The user attempts to log in, and the application redirects them to Centia.io login page:
+1. User initiates login: The user attempts to log in, and the application redirects them to GC2 login page:
 
 ```http
-GET https://api.centia.io/auth?
+GET https://api.gc2.io/auth?
     response_type=code&
     client_id=<CLIENT_ID>&
     redirect_uri=<REDIRECT_URI>&
@@ -151,9 +151,9 @@ GET https://api.centia.io/auth?
     code_challenge_method=S256
 ```
 
-2. User authenticates: The user enters their credentials on the Centia.io login page.
+2. User authenticates: The user enters their credentials on the GC2 login page.
 
-3. Centia.io returns code: If the user is authenticated and consents to the requested scopes, Centia.io
+3. GC2 returns code: If the user is authenticated and consents to the requested scopes, GC2
 redirects the user back to the specified redirect_uri with a short-lived `authorization_code` and the state string for
 the client to check:
 
@@ -161,11 +161,11 @@ the client to check:
 https://rockhall.io?code=67c2b....&state=49c9282cd61698....
 ```
 
-4. Exchange code for tokens: The client application sends a POST request to Centia.io token endpoint, including the
+4. Exchange code for tokens: The client application sends a POST request to GC2 token endpoint, including the
 authorization code and PKCE verifier:
 
 ```http title="application/json"
-POST https://api.centia.io/api/v4/oauth
+POST https://api.gc2.io/api/v4/oauth
 Accept: application/json
 Content-Type: application/json
 
@@ -181,7 +181,7 @@ Content-Type: application/json
 Or:
 
 ```http title="application/x-www-form-urlencoded"
-POST https://api.centia.io/api/v4/oauth
+POST https://api.gc2.io/api/v4/oauth
 Content-Type: application/x-www-form-urlencoded
 
 grant_type = authorization_code &
@@ -192,7 +192,7 @@ client_secret = <CLIENT_SECRET> &
 code_verifier = <CODE_VERIFIER> &
 ```
 
-5. Receive token response: Centia.io returns an access_token, refresh_token and related metadata:
+5. Receive token response: GC2 returns an access_token, refresh_token and related metadata:
 
 ```json
 {
@@ -203,7 +203,7 @@ code_verifier = <CODE_VERIFIER> &
 }
 ```
 
-6. Use the access token: Subsequent resource requests to the Centia.io APIs include the access_token:
+6. Use the access token: Subsequent resource requests to the GC2 APIs include the access_token:
 
 ```http
 Authorization: Bearer eyJhbGciOiJIUzI1...
@@ -214,16 +214,16 @@ Authorization: Bearer eyJhbGciOiJIUzI1...
 The [SDK](./sdk) implements the Authorization Code Flow with PKCE in the `CodeFlow` class — it handles the redirect, `state` validation (CSRF protection), the code/token exchange, token storage and cleanup of the URL for you.
 
 Required options:
-- `host`: Base URL of your Centia.io instance, e.g. `https://api.centia.io`
-- `clientId`: OAuth client id configured in Centia.io
-- `redirectUri`: The URL in your app that handles the redirect back from Centia.io (must be whitelisted on the client)
+- `host`: Base URL of your GC2 instance, e.g. `https://api.gc2.io`
+- `clientId`: OAuth client id configured in GC2
+- `redirectUri`: The URL in your app that handles the redirect back from GC2 (must be whitelisted on the client)
 - `scope` (optional): Not in use yet, but will be used to request additional permissions from the user.
 
 ```ts title="Browser SPA"
-import { CodeFlow } from "@centia-io/sdk";
+import { CodeFlow } from "@mapcentia/gc2-sdk";
 
 const codeFlow = new CodeFlow({
-  host: "https://api.centia.io",
+  host: "https://api.gc2.io",
   clientId: "your-client-id",
   redirectUri: window.location.origin + "/auth/callback"
 });
@@ -237,7 +237,7 @@ codeFlow.redirectHandle().then((signedIn) => {
 
 // Start sign-in when the user clicks Login
 function onLoginClick() {
-  codeFlow.signIn(); // Redirects to the Centia.io auth page
+  codeFlow.signIn(); // Redirects to the GC2 auth page
 }
 
 // Sign out (clears tokens/options and redirects to the signout endpoint)
@@ -275,7 +275,7 @@ Security considerations:
 1. Device requests a device code: The device makes a POST request to the device authorization endpoint:
 
 ```http
-POST https://api.centia.io/api/v4/oauth/device
+POST https://api.gc2.io/api/v4/oauth/device
 Accept: application/json
 Content-Type: application/json
 
@@ -284,13 +284,13 @@ Content-Type: application/json
 }
 ```
 
-2. Receive device and user codes: The Centia.io responds with a device_code, user_code, verification_uri, and interval:
+2. Receive device and user codes: The GC2 responds with a device_code, user_code, verification_uri, and interval:
 
 ```json
 {
     "device_code": "<DEVICE_CODE>",
     "user_code": "AB12-CD34",
-    "verification_uri": "https://api.centia.io/api/v4/oauth",
+    "verification_uri": "https://api.gc2.io/api/v4/oauth",
     "expires_in": 1800,
     "interval": 5
 }
@@ -298,16 +298,16 @@ Content-Type: application/json
 
 Display instructions to the user: The device shows or speaks instructions to the user:
 - User Code: AB12-CD34
-- Verification URL: https://api.centia.io/device
+- Verification URL: https://api.gc2.io/device
 
-User authorizes: On a separate device (phone, laptop), the user navigates to https://api.centia.io/device, enters the
+User authorizes: On a separate device (phone, laptop), the user navigates to https://api.gc2.io/device, enters the
 user_code, and logs in. The user grants permission for the device to access their account.
 
 Device polls for token: The device repeatedly polls the token endpoint with the `device_code` and `client_id` at intervals
 specified by the interval:
 
 ```http
-POST POST https://api.centia.io/api/v4/oauth
+POST POST https://api.gc2.io/api/v4/oauth
 Content-Type: application/json
 
 {
@@ -318,8 +318,8 @@ Content-Type: application/json
 }
 ```
 
-Token issued: Once the user authorizes, Centia.io returns the access_token and optional refresh_token to the device.
-The device then uses the access_token to communicate with Centia.io.
+Token issued: Once the user authorizes, GC2 returns the access_token and optional refresh_token to the device.
+The device then uses the access_token to communicate with GC2.
 
 :::note
 `client_secret` is only required for confidential clients.
@@ -332,7 +332,7 @@ A guest token gives an app a bearer token for **public access — without any us
 Request a guest token with the database and an OAuth client id — no `Authorization` header is needed:
 
 ```http
-POST https://api.centia.io/api/v4/oauth/guest
+POST https://api.gc2.io/api/v4/oauth/guest
 Content-Type: application/json
 
 {
@@ -367,10 +367,10 @@ The token carries the same rights as the default user — nothing more.
 The [SDK](./sdk) (0.2.14+) wraps the endpoint in the `GuestFlow` class. After `signIn()`, the tokens are stored and all subsequent SDK calls (`Sql`, `Rpc`, `Gql`, ...) are authenticated as the default user, with automatic refresh:
 
 ```ts
-import { GuestFlow } from "@centia-io/sdk";
+import { GuestFlow } from "@mapcentia/gc2-sdk";
 
 const flow = new GuestFlow({
-  host: "https://api.centia.io",
+  host: "https://api.gc2.io",
   clientId: "your-client-id",
   database: "your-database",
   // clientSecret: only for confidential clients
@@ -383,13 +383,13 @@ flow.signOut();
 
 ## Token Lifecycles and Refresh Tokens
 
-For all three flows, Centia.io issue refresh tokens alongside access tokens. A refresh token lets you request new
+For all three flows, GC2 issue refresh tokens alongside access tokens. A refresh token lets you request new
 access tokens without re-authenticating the user.
 
 Refresh token request:
 
 ```http
-POST https://api.centia.io/api/v4/oauth
+POST https://api.gc2.io/api/v4/oauth
 Content-Type: application/json
 
 {
@@ -435,9 +435,9 @@ Best for: IoT, smart devices, or other specialized hardware.
 
 ## Implementation Details
 
-Each of these flows is fully supported by our Centia.io. In practice, you will:
+Each of these flows is fully supported by our GC2. In practice, you will:
 
-- Register your client with Centia.io [Client API](./clients) to obtain a client_id and client_secret.
+- Register your client with GC2 [Client API](./clients) to obtain a client_id and client_secret.
 - Configure redirect URIs as needed for each application.
 - Integrate the flow most appropriate for your application’s user experience and security requirements.
 See [SDK](./sdk)

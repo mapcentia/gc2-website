@@ -1,6 +1,6 @@
 ---
 title: Getting started
-description: Get started with Centia.io by choosing cloud or self-hosted, open the Web App, install the CLI, create your first schema and table and run your first SQL queries.
+description: Get started with GC2 by choosing cloud or self-hosted, open the Web App, install the CLI, create your first schema and table and run your first SQL queries.
 sidebar_position: 15
 ---
 
@@ -11,33 +11,33 @@ import TabItem from '@theme/TabItem';
 
 Choose your deployment model first:
 
-- Managed Centia Cloud: [Sign up and create a backend](/console)
+- Managed GC2 Cloud: [Sign up and create a backend](/console)
 - Self-hosted with Docker: [Open source and self-hosting guide](./opensource)
 
 Then pick whichever interface suits you — **Web App**, **CLI**, or **API**. All three give you access to the full platform.
 
 ## Web App
 
-The Centia Web App is the fastest way to get started. After creating a backend, open the [console](/console) and you can visually manage schemas, tables, columns, users, clients, and more — no code required.
+The GC2 Web App is the fastest way to get started. After creating a backend, open the [console](/console) and you can visually manage schemas, tables, columns, users, clients, and more — no code required.
 
-![Centia Web App overview](/img/screenshots/webapp-placeholder.svg)
+![GC2 Web App overview](/img/screenshots/webapp-placeholder.svg)
 
 ## Install the CLI
 
 <Tabs>
     <TabItem value="npm" label="npm" default>
         ```bash
-        npm install @centia-io/cli --global
+        npm install @mapcentia/gc2-cli --global
         ```
     </TabItem>
     <TabItem value="yarn" label="Yarn">
         ```bash
-        yarn global add @centia-io/cli
+        yarn global add @mapcentia/gc2-cli
         ```
     </TabItem>
     <TabItem value="pnpm" label="pnpm">
         ```bash
-        pnpm add @centia-io/cli --global
+        pnpm add @mapcentia/gc2-cli --global
         ```
     </TabItem>
 </Tabs>
@@ -46,38 +46,38 @@ The Centia Web App is the fastest way to get started. After creating a backend, 
 
 Start by logging in to your backend:
 ```bash
-centia login
+gc2 login
 ```
 
 Create a new schema for your tables:
 ```bash
-centia schema add "rollhall"
+gc2 schema add "rollhall"
 ```
 
 Create a new table in the schema:
 ```bash
-centia table add "rollhall" "inductees"
+gc2 table add "rollhall" "inductees"
 ```
 
 Add columns in your table:
 ```bash
-centia column add "rollhall" "inductees" "id" int
-centia column add "rollhall" "inductees" "name" varchar
+gc2 column add "rollhall" "inductees" "id" int
+gc2 column add "rollhall" "inductees" "name" varchar
 ```
 
 Then add a primary key to your `id` column:
 ```bash
-centia constraint add "rollhall" "inductees" "id" primary
+gc2 constraint add "rollhall" "inductees" "id" primary
 ```
 
 Now your table is ready for data inserts:
 ```bash
-echo "INSERT into rollhall.inductees values(1, ‘Guns n’’ Roses’)" | centia sql
+echo "INSERT into rollhall.inductees values(1, ‘Guns n’’ Roses’)" | gc2 sql
 ```
 
 Run queries on your table:
 ```bash
-echo "select * from rollhall.inductees" | centia sql
+echo "select * from rollhall.inductees" | gc2 sql
 ```
 
 

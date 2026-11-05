@@ -1,6 +1,6 @@
 ---
 title: Import
-description: Upload CSV, GeoJSON, GeoParquet, FlatGeobuf, shapefile, GeoPackage, MapInfo and File Geodatabase files to Centia.io and import them into tables with the file API, CLI or Web App.
+description: Upload CSV, GeoJSON, GeoParquet, FlatGeobuf, shapefile, GeoPackage, MapInfo and File Geodatabase files to GC2 and import them into tables with the file API, CLI or Web App.
 sidebar_position: 70
 ---
 
@@ -11,7 +11,7 @@ import TabItem from '@theme/TabItem';
 
 The import API turns a data file into a table. You upload one or more files, such as CSV, GeoJSON, GeoParquet, FlatGeobuf, a zipped shapefile, a GeoPackage, a MapInfo table or a File Geodatabase, to temporary storage, then ask the server to process them into a target [schema](./schema/schemas.mdx) and table. The server reads the file with GDAL/OGR, so most vector and tabular formats are accepted, coordinate reference systems can be set or reprojected on the way in, and a dry run validates the result before anything is written.
 
-This is the quickest way to get existing data into Centia.io, whether you are seeding a new backend, appending a monthly delivery to an existing table or loading a dataset for a map. Spatial files become tables with a geometry column and are immediately available through [SQL](./statement.mdx) and the [OGC services](./ogc/services.mdx).
+This is the quickest way to get existing data into GC2 (Geo Compute Cloud), whether you are seeding a new backend, appending a monthly delivery to an existing table or loading a dataset for a map. Spatial files become tables with a geometry column and are immediately available through [SQL](./statement.mdx) and the [OGC services](./ogc/services.mdx).
 
 To import from a URL on a recurring schedule instead, use the [Scheduler](./scheduler.mdx).
 
@@ -26,12 +26,12 @@ Uploads one or more files to be processed later.
 
 <Tabs>
   <TabItem value="webapp" label="Web App">
-    ![Upload files in the Centia Web App](/img/screenshots/webapp-placeholder.svg)
+    ![Upload files in the GC2 Web App](/img/screenshots/webapp-placeholder.svg)
   </TabItem>
   <TabItem value="http" label="HTTP" default>
 
 ```http title="Upload a file for later import"
-POST https://api.centia.io/api/v4/file/upload HTTP/1.1
+POST https://api.gc2.io/api/v4/file/upload HTTP/1.1
 Authorization: Bearer abc123
 Content-Type: multipart/form-data
 
@@ -40,7 +40,7 @@ Content-Type: multipart/form-data
 
 ```bash title="Upload using curl"
 curl \
-  -X POST "https://api.centia.io/api/v4/file/upload" \
+  -X POST "https://api.gc2.io/api/v4/file/upload" \
   -H "Authorization: Bearer abc123" \
   -F "filename=@./mydata.csv"
 ```
@@ -49,11 +49,11 @@ curl \
   <TabItem value="cli" label="CLI">
 
 ```bash title="Upload and process a file"
-centia import ./mydata.csv
+gc2 import ./mydata.csv
 ```
 
 ```bash title="Upload and process a directory with all files and subdirectories"
-centia import ./mydata_dir
+gc2 import ./mydata_dir
 ```
 
   </TabItem>
@@ -75,7 +75,7 @@ Imports the previously uploaded file into a database schema. You can run a dry-r
 
 
 ```http title="Dry-run import (no changes written)"
-POST https://api.centia.io/api/v4/file/process HTTP/1.1
+POST https://api.gc2.io/api/v4/file/process HTTP/1.1
 Content-Type: application/json
 Accept: application/json
 Authorization: Bearer abc123
@@ -87,7 +87,7 @@ Authorization: Bearer abc123
 ```
 
 ```http title="Commit import (write data to table)"
-POST https://api.centia.io/api/v4/file/process HTTP/1.1
+POST https://api.gc2.io/api/v4/file/process HTTP/1.1
 Accept: application/json
 Content-Type: application/json
 Authorization: Bearer abc123
@@ -164,12 +164,12 @@ Examples
 
 ```bash title="Import a zipped Shapefile as MultiPolygon and assign EPSG:4326 if missing"
 # 1) Upload
-curl -X POST "https://api.centia.io/api/v4/file/upload" \
+curl -X POST "https://api.gc2.io/api/v4/file/upload" \
   -H "Authorization: Bearer abc123" \
   -F "filename=@./parcels.zip"
 
 # 2) Process (commit)
-curl -X POST "https://api.centia.io/api/v4/file/process" \
+curl -X POST "https://api.gc2.io/api/v4/file/process" \
   -H "Authorization: Bearer abc123" \
   -H "Content-Type: application/json" \
   -d "{\n  \"file\": \"parcels.zip\",\n  \"schema\": \"cadastre\",\n  \"import\": true,\n  \"p_multi\": true,\n  \"s_srs\": \"EPSG:4326\"\n}"
@@ -177,19 +177,19 @@ curl -X POST "https://api.centia.io/api/v4/file/process" \
 
 ```bash title="Import a CSV with lon/lat columns into my_schema.points"
 # 1) Dry-run to validate coordinate detection
-centia import ./points.csv --dry_run
+gc2 import ./points.csv --dry_run
 # 2) Commit
-centia import ./points.csv my_schema
+gc2 import ./points.csv my_schema
 ```
 
 ```bash title="Import a GeoParquet file into my_schema"
 # 1) Upload
-curl -X POST "https://api.centia.io/api/v4/file/upload" \
+curl -X POST "https://api.gc2.io/api/v4/file/upload" \
   -H "Authorization: Bearer abc123" \
   -F "filename=@./buildings.parquet"
 
 # 2) Process (commit). The CRS is read from the GeoParquet metadata, so s_srs is only a fallback.
-curl -X POST "https://api.centia.io/api/v4/file/process" \
+curl -X POST "https://api.gc2.io/api/v4/file/process" \
   -H "Authorization: Bearer abc123" \
   -H "Content-Type: application/json" \
   -d "{\n  \"file\": \"buildings.parquet\",\n  \"schema\": \"my_schema\",\n  \"import\": true,\n  \"p_multi\": true\n}"

@@ -1,6 +1,6 @@
 ---
 title: Sub-users
-description: Create and manage sub-users in Centia.io, the API identities your application authenticates as. Covers creation, groups, privilege inheritance and self-service signup.
+description: Create and manage sub-users in GC2, the API identities your application authenticates as. Covers creation, groups, privilege inheritance and self-service signup.
 sidebar_position: 40
 ---
 
@@ -9,7 +9,7 @@ import TabItem from '@theme/TabItem';
 
 # Sub-users
 
-A sub-user is an identity within your Centia.io database that can authenticate with [OAuth](./oauth.mdx) and call the API with its own, limited rights. The database itself has one super-user, the account you created the backend with, which has unrestricted access. For anything beyond a single-user project you create sub-users so that each application, team member or end user gets its own credentials and only the access it needs.
+A sub-user is an identity within your GC2 (Geo Compute Cloud) database that can authenticate with [OAuth](./oauth.mdx) and call the API with its own, limited rights. The database itself has one super-user, the account you created the backend with, which has unrestricted access. For anything beyond a single-user project you create sub-users so that each application, team member or end user gets its own credentials and only the access it needs.
 
 Each sub-user owns a [schema](./schema/schemas.mdx) with the same name and starts with no access to tables outside it. You open up access per table with [privileges](./privileges.mdx), restrict it further with row-level [rules](./rules.mdx), and organise sub-users in groups so that privileges are inherited. This page covers creating, listing, updating and deleting sub-users, group membership and inheritance, and the self-service signup flow for end users.
 
@@ -17,12 +17,12 @@ Each sub-user owns a [schema](./schema/schemas.mdx) with the same name and start
 
 <Tabs>
     <TabItem value="webapp" label="Web App">
-        ![Create sub-user in the Centia Web App](/img/screenshots/webapp-placeholder.svg)
+        ![Create sub-user in the GC2 Web App](/img/screenshots/webapp-placeholder.svg)
     </TabItem>
     <TabItem value="http" label="HTTP" default>
 
         ```http title="Create a new sub-user"
-        POST https://api.centia.io/api/v4/users HTTP/1.1
+        POST https://api.gc2.io/api/v4/users HTTP/1.1
         Content-Type: application/json
         Authorization: Bearer abc123
 
@@ -33,7 +33,7 @@ Each sub-user owns a [schema](./schema/schemas.mdx) with the same name and start
         }
         ```
         ```http title="Create multiple sub-users"
-        POST https://api.centia.io/api/v4/users HTTP/1.1
+        POST https://api.gc2.io/api/v4/users HTTP/1.1
         Content-Type: application/json
         Authorization: Bearer abc123
 
@@ -71,7 +71,7 @@ Each sub-user owns a [schema](./schema/schemas.mdx) with the same name and start
     <TabItem value="cli" label="CLI">
 
         ```bash title="Create a new sub-user"
-        centia user add "alx"
+        gc2 user add "alx"
         ```
 
     </TabItem>
@@ -81,18 +81,18 @@ Each sub-user owns a [schema](./schema/schemas.mdx) with the same name and start
 
 <Tabs>
     <TabItem value="webapp" label="Web App">
-        ![View sub-users in the Centia Web App](/img/screenshots/webapp-placeholder.svg)
+        ![View sub-users in the GC2 Web App](/img/screenshots/webapp-placeholder.svg)
     </TabItem>
     <TabItem value="http" label="HTTP" default>
 
         ```http title="Get specific sub-users"
-        GET https://api.centia.io/api/v4/users/alx,slash HTTP/1.1
+        GET https://api.gc2.io/api/v4/users/alx,slash HTTP/1.1
         Accept: application/json; charset=utf-8
         Authorization: Bearer abc123
         ```
 
         ```http title="Get all sub-users"
-        GET https://api.centia.io/api/v4/users HTTP/1.1
+        GET https://api.gc2.io/api/v4/users HTTP/1.1
         Accept: application/json; charset=utf-8
         Authorization: Bearer abc123
         ```
@@ -101,7 +101,7 @@ Each sub-user owns a [schema](./schema/schemas.mdx) with the same name and start
     <TabItem value="cli" label="CLI">
 
         ```bash title="A single sub-user"
-        centia user get "alx"
+        gc2 user get "alx"
         ```
 
     </TabItem>
@@ -113,12 +113,12 @@ It is not possible to update all sub-users in a single operation. You must speci
 
 <Tabs>
     <TabItem value="webapp" label="Web App">
-        ![Update sub-users in the Centia Web App](/img/screenshots/webapp-placeholder.svg)
+        ![Update sub-users in the GC2 Web App](/img/screenshots/webapp-placeholder.svg)
     </TabItem>
     <TabItem value="http" label="HTTP" default>
 
         ```http title="Update specific sub-users"
-        PATCH https://api.centia.io/api/v4/users/alx,slash HTTP/1.1
+        PATCH https://api.gc2.io/api/v4/users/alx,slash HTTP/1.1
         Content-Type: application/json
         Authorization: Bearer abc123
 
@@ -132,7 +132,7 @@ It is not possible to update all sub-users in a single operation. You must speci
     <TabItem value="cli" label="CLI">
 
         ```bash title="A single user"
-        centia user update "alx"
+        gc2 user update "alx"
         ```
 
     </TabItem>
@@ -145,12 +145,12 @@ It is not possible to delete all sub-users in a single operation. You must speci
 
 <Tabs>
     <TabItem value="webapp" label="Web App">
-        ![Delete sub-users in the Centia Web App](/img/screenshots/webapp-placeholder.svg)
+        ![Delete sub-users in the GC2 Web App](/img/screenshots/webapp-placeholder.svg)
     </TabItem>
     <TabItem value="http" label="HTTP" default>
 
         ```http title="Delete specific sub-users"
-        DELETE https://api.centia.io/api/v4/users/izzy,steven HTTP/1.1
+        DELETE https://api.gc2.io/api/v4/users/izzy,steven HTTP/1.1
         Accept: application/json; charset=utf-8
         Authorization: Bearer abc123
         ```
@@ -159,7 +159,7 @@ It is not possible to delete all sub-users in a single operation. You must speci
     <TabItem value="cli" label="CLI">
 
         ```bash
-        centia user drop "izzy"
+        gc2 user drop "izzy"
         ```
 
     </TabItem>
@@ -173,12 +173,12 @@ The `user_group` property holds a JSON array of group names, encoded as a string
 
 <Tabs>
     <TabItem value="webapp" label="Web App">
-        ![Set groups in the Centia Web App](/img/screenshots/webapp-placeholder.svg)
+        ![Set groups in the GC2 Web App](/img/screenshots/webapp-placeholder.svg)
     </TabItem>
     <TabItem value="http" label="HTTP" default>
 
         ```http title="Add sub-users to a group"
-        PATCH https://api.centia.io/api/v4/users/alx,slash HTTP/1.1
+        PATCH https://api.gc2.io/api/v4/users/alx,slash HTTP/1.1
         Content-Type: application/json
         Authorization: Bearer abc123
 
@@ -188,7 +188,7 @@ The `user_group` property holds a JSON array of group names, encoded as a string
         ```
 
         ```http title="Membership of multiple groups"
-        PATCH https://api.centia.io/api/v4/users/slash HTTP/1.1
+        PATCH https://api.gc2.io/api/v4/users/slash HTTP/1.1
         Content-Type: application/json
         Authorization: Bearer abc123
 
@@ -219,14 +219,14 @@ Inheritance applies everywhere privileges are enforced: SQL and the HTTP API as 
 
 ## Signup (Browser – Create a new user)
 
-Centia.io supports signup via the browser. From your app, you can redirect the user to the signup page:
+GC2 supports signup via the browser. From your app, you can redirect the user to the signup page:
 
 ```
-https://api.centia.io/signup?client_id=abc123&parentdb=mydb&redirect_uri=https://myapp.com/login
+https://api.gc2.io/signup?client_id=abc123&parentdb=mydb&redirect_uri=https://myapp.com/login
 ```
 
 Parameters:
-- client_id: OAuth client id configured in Centia.io
+- client_id: OAuth client id configured in GC2
 - parentdb: The parent/tenant database under which the new user should be created
 - redirect_uri: URL in your app to return to after sign‑up
 
@@ -235,10 +235,10 @@ Parameters:
 The [SDK](./sdk) has a `SignUp` helper that redirects the user to the signup page:
 
 ```ts
-import { SignUp } from "@centia-io/sdk";
+import { SignUp } from "@mapcentia/gc2-sdk";
 
 const signUp = new SignUp({
-  host: "https://api.centia.io",
+  host: "https://api.gc2.io",
   clientId: "your-client-id",
   parentDb: "your-parent-database",
   redirectUri: "https://myapp.com/login"
@@ -246,7 +246,7 @@ const signUp = new SignUp({
 
 // Start sign-up when the user clicks "Create account"
 function onSignUpClick() {
-  signUp.signUp(); // Redirects to the Centia.io sign-up page
+  signUp.signUp(); // Redirects to the GC2 sign-up page
 }
 ```
 

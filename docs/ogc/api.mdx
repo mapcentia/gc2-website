@@ -6,14 +6,14 @@ sidebar_position: 2
 
 # OGC API
 
-The OGC API is a **standards-based, read-only REST view** of the same layers the [OGC services](./services.mdx) (WMS/WFS) expose. It implements **OGC API Features** (Part 1 Core and Part 2 CRS) for reading features as GeoJSON and **OGC API Maps** (Part 1 Core) for rendered map images — so any client that speaks the OGC API standards (QGIS, GDAL/OGR and others) can browse and read your data with no Centia-specific code.
+The OGC API is a **standards-based, read-only REST view** of the same layers the [OGC services](./services.mdx) (WMS/WFS) expose. It implements **OGC API Features** (Part 1 Core and Part 2 CRS) for reading features as GeoJSON and **OGC API Maps** (Part 1 Core) for rendered map images — so any client that speaks the OGC API standards (QGIS, GDAL/OGR and others) can browse and read your data with no GC2 (Geo Compute Cloud)-specific code.
 
 Every layer with OGC services enabled is a **collection**, identified as `schema.table`. Features are served by the same WFS engine and maps by the same WMS backend as the classic services, so [privileges](../privileges.mdx), [geofence rules](../rules.mdx), versioning and workflow all apply. The API is read-only — write with the [Feature API](../features.mdx), [SQL](../statement.mdx) or WFS-T.
 
 All routes are `GET` under a database-qualified base URL:
 
 ```
-https://api.centia.io/api/v4/ogc/database/{database}
+https://api.gc2.io/api/v4/ogc/database/{database}
 ```
 
 | Route | Returns |
@@ -34,7 +34,7 @@ Requests are authenticated like the classic OGC services: **Bearer token** (must
 `/collections` lists what the caller may read — protected layers are simply omitted for callers without access. Each collection carries its spatial extent (in CRS84), the list of supported CRS URIs and, for versioned layers, a temporal extent. Raster layers appear as map-only collections without an `items` link:
 
 ```http title="Request"
-GET https://api.centia.io/api/v4/ogc/database/mydb/collections/rockhall.venues HTTP/1.1
+GET https://api.gc2.io/api/v4/ogc/database/mydb/collections/rockhall.venues HTTP/1.1
 Accept: application/json
 Authorization: Bearer abc123
 ```
@@ -44,7 +44,7 @@ Authorization: Bearer abc123
 `/collections/{id}/items` returns the features as a streamed `application/geo+json` `FeatureCollection`. The response carries `numberMatched` (the total), `numberReturned`, and `next`/`prev` links for paging; the CRS of the returned geometry is echoed in the `Content-Crs` header:
 
 ```http title="Request"
-GET https://api.centia.io/api/v4/ogc/database/mydb/collections/rockhall.venues/items?limit=2 HTTP/1.1
+GET https://api.gc2.io/api/v4/ogc/database/mydb/collections/rockhall.venues/items?limit=2 HTTP/1.1
 Accept: application/geo+json
 Authorization: Bearer abc123
 ```
@@ -110,7 +110,7 @@ Unknown query parameters are rejected with `400` (`UNKNOWN_PARAMETER`), as requi
 `/items/{fid}` returns a bare GeoJSON `Feature` (with `links`), or `404` if it does not exist. It accepts only `crs`, `datetime` and `f`:
 
 ```http title="Request"
-GET https://api.centia.io/api/v4/ogc/database/mydb/collections/rockhall.venues/items/1 HTTP/1.1
+GET https://api.gc2.io/api/v4/ogc/database/mydb/collections/rockhall.venues/items/1 HTTP/1.1
 Accept: application/geo+json
 Authorization: Bearer abc123
 ```
@@ -120,7 +120,7 @@ Authorization: Bearer abc123
 `/collections/{id}/map` renders the collection as an image through the WMS backend, styled with the layer's [classes, styles and labels](../layer/layers.mdx):
 
 ```http title="Request"
-GET https://api.centia.io/api/v4/ogc/database/mydb/collections/rockhall.venues/map?bbox=-118.5,33.9,-118.2,34.2&width=1024&f=png HTTP/1.1
+GET https://api.gc2.io/api/v4/ogc/database/mydb/collections/rockhall.venues/map?bbox=-118.5,33.9,-118.2,34.2&width=1024&f=png HTTP/1.1
 Authorization: Bearer abc123
 ```
 
@@ -135,7 +135,7 @@ Parameters:
 The dataset-level `/map?collections=a,b` renders several collections in one image — they must belong to the **same schema** (`400` otherwise):
 
 ```http title="Request"
-GET https://api.centia.io/api/v4/ogc/database/mydb/map?collections=rockhall.venues,rockhall.tours&width=1024 HTTP/1.1
+GET https://api.gc2.io/api/v4/ogc/database/mydb/map?collections=rockhall.venues,rockhall.tours&width=1024 HTTP/1.1
 Authorization: Bearer abc123
 ```
 
@@ -153,10 +153,10 @@ The per-layer access model is the same as for WMS/WFS: anonymous callers read la
 
 ## Using the SDK
 
-The [`@centia-io/sdk`](../sdk.mdx) (0.2.13+) wraps the API in the `Ogc` class. Feature properties can be typed, CRS URIs are built with the exported `OGC_CRS84` constant and `ogcEpsgCrs()` helper, and errors are thrown as `CentiaApiError` with `.status` and `.code`. Map images are fetched by URL — use `mapUrl`/`datasetMapUrl` to build URLs for `<img>` tags or map libraries:
+The [`@mapcentia/gc2-sdk`](../sdk.mdx) (0.2.13+) wraps the API in the `Ogc` class. Feature properties can be typed, CRS URIs are built with the exported `OGC_CRS84` constant and `ogcEpsgCrs()` helper, and errors are thrown as `CentiaApiError` with `.status` and `.code`. Map images are fetched by URL — use `mapUrl`/`datasetMapUrl` to build URLs for `<img>` tags or map libraries:
 
 ```ts
-import { createCentiaClient, Ogc, OGC_CRS84, ogcEpsgCrs } from '@centia-io/sdk'
+import { createCentiaClient, Ogc, OGC_CRS84, ogcEpsgCrs } from '@mapcentia/gc2-sdk'
 
 const ogc = new Ogc(createCentiaClient({ baseUrl, auth: { getAccessToken } }))
 

@@ -17,18 +17,18 @@ Features are matched against classes in `sortid` order. When the layer property 
 
 <Tabs>
     <TabItem value="webapp" label="Web App">
-        ![View classes in the Centia Web App](/img/screenshots/webapp-placeholder.svg)
+        ![View classes in the GC2 Web App](/img/screenshots/webapp-placeholder.svg)
     </TabItem>
     <TabItem value="http" label="HTTP" default>
 
         ```http title="All classes of a layer"
-        GET https://api.centia.io/api/v4/layers/rockhall.venues.the_geom/classes HTTP/1.1
+        GET https://api.gc2.io/api/v4/layers/rockhall.venues.the_geom/classes HTTP/1.1
         Accept: application/json; charset=utf-8
         Authorization: Bearer abc123
         ```
 
         ```http title="A specific class"
-        GET https://api.centia.io/api/v4/layers/rockhall.venues.the_geom/classes/1 HTTP/1.1
+        GET https://api.gc2.io/api/v4/layers/rockhall.venues.the_geom/classes/1 HTTP/1.1
         Accept: application/json; charset=utf-8
         Authorization: Bearer abc123
         ```
@@ -42,12 +42,12 @@ The server assigns the class `id` — a request that includes an `id` is rejecte
 
 <Tabs>
     <TabItem value="webapp" label="Web App">
-        ![Add class in the Centia Web App](/img/screenshots/webapp-placeholder.svg)
+        ![Add class in the GC2 Web App](/img/screenshots/webapp-placeholder.svg)
     </TabItem>
     <TabItem value="http" label="HTTP" default>
 
         ```http title="Add a class with a nested style"
-        POST https://api.centia.io/api/v4/layers/rockhall.venues.the_geom/classes HTTP/1.1
+        POST https://api.gc2.io/api/v4/layers/rockhall.venues.the_geom/classes HTTP/1.1
         Content-Type: application/json
         Authorization: Bearer abc123
 
@@ -74,7 +74,7 @@ The server assigns the class `id` — a request that includes an `id` is rejecte
 `PATCH` merges the keys you send into the class. Styles and labels are managed through their own routes — see [Styles](./styles.mdx) and [Labels](./labels.mdx).
 
 ```http title="Change the expression"
-PATCH https://api.centia.io/api/v4/layers/rockhall.venues.the_geom/classes/1 HTTP/1.1
+PATCH https://api.gc2.io/api/v4/layers/rockhall.venues.the_geom/classes/1 HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer abc123
 
@@ -86,7 +86,7 @@ Authorization: Bearer abc123
 ## Delete a class
 
 ```http
-DELETE https://api.centia.io/api/v4/layers/rockhall.venues.the_geom/classes/1 HTTP/1.1
+DELETE https://api.gc2.io/api/v4/layers/rockhall.venues.the_geom/classes/1 HTTP/1.1
 Authorization: Bearer abc123
 ```
 

@@ -1,6 +1,6 @@
 ---
 title: Metadata
-description: Attach titles, descriptions, tags and other supplementary metadata to Centia.io tables and views, stored outside the schema and read by clients, map viewers and tools.
+description: Attach titles, descriptions, tags and other supplementary metadata to GC2 tables and views, stored outside the schema and read by clients, map viewers and tools.
 sidebar_position: 30
 ---
 
@@ -9,7 +9,7 @@ import TabItem from '@theme/TabItem';
 
 # Metadata
 
-Relation metadata provides supplementary, context-dependent information about database relations in Centia.io.
+Relation metadata provides supplementary, context-dependent information about database relations in GC2 (Geo Compute Cloud).
 
 Metadata is stored outside the physical database schema and does not affect table structure, constraints, or storage.
 Instead, it is consumed by clients such as admin interfaces, map viewers, SDKs, query builders, and automation tools.
@@ -20,7 +20,7 @@ Each metadata entry is keyed by the fully qualified relation name: `<schema>.<re
 
 <Tabs>
     <TabItem value="webapp" label="Web App">
-        ![View metadata in the Centia Web App](/img/screenshots/webapp-placeholder.svg)
+        ![View metadata in the GC2 Web App](/img/screenshots/webapp-placeholder.svg)
     </TabItem>
     <TabItem value="http" label="HTTP" default>
 
@@ -42,7 +42,7 @@ To update metadata, use the `PATCH` method. You can update relation-level attrib
 
 <Tabs>
     <TabItem value="webapp" label="Web App">
-        ![Update metadata in the Centia Web App](/img/screenshots/webapp-placeholder.svg)
+        ![Update metadata in the GC2 Web App](/img/screenshots/webapp-placeholder.svg)
     </TabItem>
     <TabItem value="http" label="HTTP" default>
 

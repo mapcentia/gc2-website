@@ -1,13 +1,13 @@
 ---
 title: Realtime
-description: Subscribe to database change events over WebSocket in Centia.io. Authenticate with a JWT, choose the relations to follow and receive batched insert, update and delete events.
+description: Subscribe to database change events over WebSocket in GC2. Authenticate with a JWT, choose the relations to follow and receive batched insert, update and delete events.
 sidebar_position: 85
 ---
 
 
 # Realtime
 
-Realtime lets a client receive a notification whenever rows in a table are inserted, updated or deleted, without polling. A client opens a WebSocket to the event service with its Centia.io JWT, names the relations it wants to follow, and from then on receives batched change events for those tables. Use it to keep a map or dashboard in sync with edits made by other users, to react to imports as they land, or to build collaborative editing on top of your tables.
+Realtime lets a client receive a notification whenever rows in a table are inserted, updated or deleted, without polling. A client opens a WebSocket to the event service with its GC2 (Geo Compute Cloud) JWT, names the relations it wants to follow, and from then on receives batched change events for those tables. Use it to keep a map or dashboard in sync with edits made by other users, to react to imports as they land, or to build collaborative editing on top of your tables.
 
 Events are opt-in per table through the `emit_events` flag, and access is enforced with the same [privileges](./privileges.mdx) as the rest of the platform: a [sub-user](./users.mdx) can only subscribe to relations it may read. The same WebSocket also accepts [SQL](./statement.mdx) statements. The [SDK](./sdk.mdx) wraps the connection and subscription handling; the sections below describe the protocol itself.
 
@@ -15,7 +15,7 @@ Events are opt-in per table through the `emit_events` flag, and access is enforc
 
 The realtime system exposes a lightweight HTTP/WebSocket:
 
-- A WebSocket endpoint for authenticated clients: `wss://event.centia.io/`
+- A WebSocket endpoint for authenticated clients: `wss://event.gc2.io/`
 - Accepts a JWT token and (for sub‑users) a list of relations they need events from.
 - Broadcasts batched event notifications to all connected clients that match relations they listen to.
 - A simple health endpoint: `/ping` → `pong`.
@@ -24,11 +24,11 @@ The realtime system exposes a lightweight HTTP/WebSocket:
 
 The WebSocket endpoint is:
 
-- wss://event.centia.io?token=...&rels=...
+- wss://event.gc2.io?token=...&rels=...
 
 Query parameters:
 
-- `token` (required): A Centia.io JWT.
+- `token` (required): A GC2 JWT.
 - `rels` (optional): Comma‑separated list of relations the client wants events from (e.g., `rockhall.inductees,rockhall.stars`).
 
 Connection flow:
@@ -51,7 +51,7 @@ Errors are returned as JSON and the socket is closed. Examples:
 To enable database change events, set `emit_events` to `true` in the table schema:
 
 ```http request
-PATCH https://api.centia.io/api/v4/schemas/my_schema/tables/my_table/events
+PATCH https://api.gc2.io/api/v4/schemas/my_schema/tables/my_table/events
 Content-Type: application/json
 Authorization: Bearer <token>
 
@@ -167,7 +167,7 @@ JavaScript (browser):
 <script>
   const token = "<your-jwt>";
   const rels = "public.parcels,public.addresses";
-  const ws = new WebSocket(`wss://event.centia.io/?token=${encodeURIComponent(token)}&rels=${encodeURIComponent(rels)}`);
+  const ws = new WebSocket(`wss://event.gc2.io/?token=${encodeURIComponent(token)}&rels=${encodeURIComponent(rels)}`);
 
   ws.onopen = () => {
     console.log("connected");
@@ -192,7 +192,7 @@ JavaScript (browser):
 
 ```js title="subscription.js"
 const token = "<your-jwt>";
-const ws = new WebSocket(`wss://event.centia.io/?token=${encodeURIComponent(token)}`);
+const ws = new WebSocket(`wss://event.gc2.io/?token=${encodeURIComponent(token)}`);
 
 ws.onopen = () => {
   // Subscribe to updates on public.users with filtering
@@ -221,8 +221,8 @@ ws.onmessage = (e) => {
 
 ```js title="index.js"
 import WebSocket from 'ws';
-const token = process.env.CENTIA_TOKEN;
-const ws = new WebSocket(`wss://event.centia.io/?token=${encodeURIComponent(token)}`);
+const token = process.env.GC2_TOKEN;
+const ws = new WebSocket(`wss://event.gc2.io/?token=${encodeURIComponent(token)}`);
 ws.on('open', () => ws.send('SELECT 42 AS answer'));
 ws.on('message', (data) => console.log(JSON.parse(data.toString())));
 ```

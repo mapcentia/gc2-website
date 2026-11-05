@@ -1,6 +1,6 @@
 ---
 title: Privileges
-description: Grant Centia.io sub-users none, read or write privilege on individual tables, inspect effective privileges and understand how schema ownership and groups affect access.
+description: Grant GC2 sub-users none, read or write privilege on individual tables, inspect effective privileges and understand how schema ownership and groups affect access.
 sidebar_position: 45
 ---
 
@@ -9,7 +9,7 @@ import TabItem from '@theme/TabItem';
 
 # Privileges
 
-Privileges are the table-level access control in Centia.io. A [sub-user](./users.mdx) owns its own schema and can do anything there, but has no access to tables in other schemas until a privilege is granted. The super-user can grant `read` or `write` on any table, and a sub-user can grant privileges on tables in the schemas it owns, so a team can share a dataset without sharing credentials.
+Privileges are the table-level access control in GC2 (Geo Compute Cloud). A [sub-user](./users.mdx) owns its own schema and can do anything there, but has no access to tables in other schemas until a privilege is granted. The super-user can grant `read` or `write` on any table, and a sub-user can grant privileges on tables in the schemas it owns, so a team can share a dataset without sharing credentials.
 
 Privileges are enforced everywhere a table is reached: the [SQL API](./statement.mdx), GraphQL, the [Feature API](./features.mdx), [Realtime](./realtime.mdx) subscriptions and the [OGC services](./ogc/services.mdx). They answer whether a user may touch a table; to restrict which rows the user sees, combine them with [rules](./rules.mdx). Privileges granted to a group are inherited by its members, as described under [groups and inheritance](./users.mdx#groups-and-inheritance).
 
@@ -23,12 +23,12 @@ By default, a sub-user has `none` privilege on tables outside their own schema. 
 
 <Tabs>
     <TabItem value="webapp" label="Web App">
-        ![Set privileges in the Centia Web App](/img/screenshots/webapp-placeholder.svg)
+        ![Set privileges in the GC2 Web App](/img/screenshots/webapp-placeholder.svg)
     </TabItem>
     <TabItem value="http" label="HTTP" default>
 
         ```http title="Setting a single privilege"
-        PATCH https://api.centia.io/api/v4/schemas/rockhall/inductees/privileges HTTP/1.1
+        PATCH https://api.gc2.io/api/v4/schemas/rockhall/inductees/privileges HTTP/1.1
         Content-Type: application/json
         Authorization: Bearer abc123
 
@@ -38,7 +38,7 @@ By default, a sub-user has `none` privilege on tables outside their own schema. 
         }
         ```
         ```http title="Setting multiple privileges"
-        PATCH https://api.centia.io/api/v4/schemas/rockhall/inductees/privileges HTTP/1.1
+        PATCH https://api.gc2.io/api/v4/schemas/rockhall/inductees/privileges HTTP/1.1
         Content-Type: application/json
         Authorization: Bearer abc123
 
@@ -58,7 +58,7 @@ By default, a sub-user has `none` privilege on tables outside their own schema. 
     <TabItem value="cli" label="CLI">
 
         ```bash
-        centia privilege set
+        gc2 privilege set
         ```
 
     </TabItem>
@@ -68,12 +68,12 @@ By default, a sub-user has `none` privilege on tables outside their own schema. 
 
 <Tabs>
     <TabItem value="webapp" label="Web App">
-        ![View privileges in the Centia Web App](/img/screenshots/webapp-placeholder.svg)
+        ![View privileges in the GC2 Web App](/img/screenshots/webapp-placeholder.svg)
     </TabItem>
     <TabItem value="http" label="HTTP" default>
 
         ```http title="Request"
-        GET https://api.centia.io/api/v4/schemas/rockhall/inductees/privileges HTTP/1.1
+        GET https://api.gc2.io/api/v4/schemas/rockhall/inductees/privileges HTTP/1.1
         Accept: application/json; charset=utf-8
         Authorization: Bearer abc123
         ```
@@ -95,7 +95,7 @@ By default, a sub-user has `none` privilege on tables outside their own schema. 
     <TabItem value="cli" label="CLI">
 
         ```bash
-        centia privilege get
+        gc2 privilege get
         ```
 
     </TabItem>

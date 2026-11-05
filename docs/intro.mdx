@@ -1,7 +1,7 @@
 ---
 title: Intro
 sidebar_position: 10
-description: What Centia.io provides as a geospatial Backend as a Service, when to use it, and how to start with the managed cloud or a self-hosted Docker deployment.
+description: What GC2 provides as a geospatial Backend as a Service, when to use it, and how to start with the managed cloud or a self-hosted Docker deployment.
 ---
 
 import Tabs from '@theme/Tabs';
@@ -9,7 +9,7 @@ import TabItem from '@theme/TabItem';
 
 # Intro
 
-Centia.io is a Backend as a Service (BaaS) that gives you a production‑ready backend — data, auth, realtime, and tooling — so you can focus on building great apps instead of maintaining servers.
+GC2 (Geo Compute Cloud) is a Backend as a Service (BaaS) that gives you a production‑ready backend — data, auth, realtime, and tooling — so you can focus on building great apps instead of maintaining servers.
 
 ## What you get
 
@@ -28,11 +28,11 @@ Centia.io is a Backend as a Service (BaaS) that gives you a production‑ready b
 
 ## Three ways to interact
 
-Centia.io gives you three interfaces — use whichever fits your workflow:
+GC2 gives you three interfaces — use whichever fits your workflow:
 
 1. **Web App** — A visual interface for managing schemas, tables, users, clients, and more. The quickest way to explore and configure your backend. [Open console →](/console)
 2. **CLI** — Automate provisioning from the terminal. Great for scripting, CI/CD, and local development. [Install the CLI →](./start#install-the-cli)
-3. **API** — Full HTTP REST and WebSocket access for every operation. Ideal for programmatic control and integration. [API reference →](https://api.centia.io/swagger-ui/index.html)
+3. **API** — Full HTTP REST and WebSocket access for every operation. Ideal for programmatic control and integration. [API reference →](https://api.gc2.io/swagger-ui/index.html)
 
 ## API conventions
 
@@ -43,7 +43,7 @@ The REST API follows a few rules across all `/api/v4` resources, so once you kno
 - **All-or-nothing on lists.** Every element is validated first — an unknown id, a bad field or a conflict in any element means nothing is created, deleted or queued, and the error names the element.
 - **Errors** carry an HTTP status and a stable `errorCode` string (such as `JOB_NOT_FOUND` or `INVALID_REQUEST`) that each page documents.
 
-## How you’ll build with Centia.io
+## How you’ll build with GC2
 
 Choose deployment:
 - Managed cloud: [Open console](/console)
@@ -55,11 +55,11 @@ Then:
 3) Connect your app with the SDK and start reading/writing data. [SDK →](./sdk)
 4) Add realtime subscriptions where your UI needs to react instantly. [Realtime →](./realtime)
 5) Secure access with OAuth and enforce rules per user or role. [OAuth →](./oauth) • [Rules →](./rules)
-6) Ship. Your frontend can be deployed anywhere; Centia.io runs and scales the backend for you.
+6) Ship. Your frontend can be deployed anywhere; GC2 runs and scales the backend for you.
 
-## When to use Centia.io
+## When to use GC2
 
-Use Centia.io when you want to:
+Use GC2 when you want to:
 - Ship quickly without building auth, data APIs, and realtime from scratch.
 - Keep full control over your data model and query with SQL.
 - Build reactive experiences (e.g., live dashboards, chats, collaborative apps).

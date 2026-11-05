@@ -1,12 +1,12 @@
 ---
 title: Snapshots
-description: Point-in-time GeoParquet and FlatGeobuf exports of Centia.io tables, stored with a STAC catalog and served over HTTP with byte-range support for DuckDB, Python, QGIS and web maps.
+description: Point-in-time GeoParquet and FlatGeobuf exports of GC2 tables, stored with a STAC catalog and served over HTTP with byte-range support for DuckDB, Python, QGIS and web maps.
 sidebar_position: 72
 ---
 
 # Snapshots
 
-A **snapshot** is a point-in-time export of a table, view or materialized view to a cloud-native file — **GeoParquet** by default, optionally also **FlatGeobuf**. Snapshots are taken asynchronously by a background worker, stored in object storage (or on local disk when self-hosting) and served back through the API with `HEAD` and HTTP byte-range support — so analytical tools like DuckDB can read them straight from Centia without downloading the whole file, and without any storage credentials.
+A **snapshot** is a point-in-time export of a table, view or materialized view to a cloud-native file — **GeoParquet** by default, optionally also **FlatGeobuf**. Snapshots are taken asynchronously by a background worker, stored in object storage (or on local disk when self-hosting) and served back through the API with `HEAD` and HTTP byte-range support — so analytical tools like DuckDB can read them straight from GC2 (Geo Compute Cloud) without downloading the whole file, and without any storage credentials.
 
 Snapshots never touch the operational PostGIS data. They give you an **immutable, dated history** of a relation that you can query, diff, archive or hand to a partner.
 
@@ -63,7 +63,7 @@ Typical use cases:
 Snapshots are queued by the **super-user** with the job API. `POST` returns `202 Accepted` immediately; a worker picks the job up within about a minute, exports the relation with `ogr2ogr` and publishes the files.
 
 ```http title="Request"
-POST https://api.centia.io/api/v4/snapshots HTTP/1.1
+POST https://api.gc2.io/api/v4/snapshots HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer abc123
 
@@ -91,7 +91,7 @@ The body may also be an **array** of request objects to queue several relations 
 ```
 
 ```http title="Request — several relations"
-POST https://api.centia.io/api/v4/snapshots HTTP/1.1
+POST https://api.gc2.io/api/v4/snapshots HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer abc123
 
@@ -115,7 +115,7 @@ Only one job per relation can be active at a time — a second `POST` while one 
 Follow `_links.self` until `status` is `succeeded` or `failed`. A comma-separated list of ids returns an array of jobs; if any id is unknown the response is `404`:
 
 ```http title="Request"
-GET https://api.centia.io/api/v4/snapshots/0f4c1b2e-4d1a-4c3f-9a0b-7b1d2e3f4a5b HTTP/1.1
+GET https://api.gc2.io/api/v4/snapshots/0f4c1b2e-4d1a-4c3f-9a0b-7b1d2e3f4a5b HTTP/1.1
 Authorization: Bearer abc123
 ```
 
@@ -159,7 +159,7 @@ Authorization: Bearer abc123
 `GET /api/v4/snapshots` lists the 50 newest jobs, newest first, with optional `?schema=` and `?relation=` filters:
 
 ```http title="Request"
-GET https://api.centia.io/api/v4/snapshots?schema=geodanmark&relation=bygning HTTP/1.1
+GET https://api.gc2.io/api/v4/snapshots?schema=geodanmark&relation=bygning HTTP/1.1
 Authorization: Bearer abc123
 ```
 
@@ -236,7 +236,7 @@ All links are relative to the document that carries them, so the catalog works u
 Published snapshots are read per relation. Any user with a bearer token and read access to the relation can use these endpoints (see [Access](#access)); anonymous access is not supported.
 
 ```
-https://api.centia.io/api/v4/schemas/{schema}/relations/{relation}/snapshots
+https://api.gc2.io/api/v4/schemas/{schema}/relations/{relation}/snapshots
 ```
 
 | Method | Route | Returns |
@@ -250,7 +250,7 @@ https://api.centia.io/api/v4/schemas/{schema}/relations/{relation}/snapshots
 ### List snapshots
 
 ```http title="Request"
-GET https://api.centia.io/api/v4/schemas/geodanmark/relations/bygning/snapshots HTTP/1.1
+GET https://api.gc2.io/api/v4/schemas/geodanmark/relations/bygning/snapshots HTTP/1.1
 Authorization: Bearer abc123
 ```
 
@@ -317,7 +317,7 @@ Every `produced` format carries an `href` to download it; a `skipped` one says w
 `/snapshots/{date}` returns the same entry plus the column list, the CRS and links to the data:
 
 ```http title="Request"
-GET https://api.centia.io/api/v4/schemas/geodanmark/relations/bygning/snapshots/2026-09-16 HTTP/1.1
+GET https://api.gc2.io/api/v4/schemas/geodanmark/relations/bygning/snapshots/2026-09-16 HTTP/1.1
 Authorization: Bearer abc123
 ```
 
@@ -351,7 +351,7 @@ The date must be a valid `YYYY-MM-DD` or `latest`; an unknown date is `404` (`NO
 Use `latest` in place of a date to keep a **fixed URL to the newest published snapshot** of a relation: `/snapshots/latest` (metadata), `/snapshots/latest/data`, `/snapshots/latest/data/{format}` and `/snapshots/latest/files/{name}` all resolve to the newest snapshot at request time. The metadata still reports the real `snapshot_date`, and dated responses carry a `_links.latest` link. These responses are sent with `Cache-Control: no-cache`, so clients revalidate after every publish; `404` (`NO_SNAPSHOT_ERROR`) means nothing is published yet.
 
 ```http title="Request"
-GET https://api.centia.io/api/v4/schemas/geodanmark/relations/bygning/snapshots/latest HTTP/1.1
+GET https://api.gc2.io/api/v4/schemas/geodanmark/relations/bygning/snapshots/latest HTTP/1.1
 Authorization: Bearer abc123
 ```
 
@@ -362,7 +362,7 @@ In the data store the partition layout is unchanged; each relation additionally 
 `/snapshots/{date}/data` serves the primary data file: the Parquet when one was produced, otherwise the only produced file. `/snapshots/{date}/data/{format}` serves the file in a named format — `/data/flatgeobuf` for the FlatGeobuf — with its own media type (`application/flatgeobuf`); an unknown format id is `400` and a format the snapshot did not produce (skipped or never requested) is `404`. Both `HEAD` and `GET` return `Accept-Ranges: bytes`, `Content-Length`, an `ETag` equal to the snapshot id and `Last-Modified` from the publish time, so Parquet readers can size the file and fetch the footer and individual row groups with `Range` requests:
 
 ```http title="Request — the last 64 KiB (where the footer lives)"
-GET https://api.centia.io/api/v4/schemas/geodanmark/relations/bygning/snapshots/2026-09-16/data HTTP/1.1
+GET https://api.gc2.io/api/v4/schemas/geodanmark/relations/bygning/snapshots/2026-09-16/data HTTP/1.1
 Authorization: Bearer abc123
 Range: bytes=-65536
 ```
@@ -413,15 +413,15 @@ DuckDB's `httpfs` extension reads Parquet over HTTP with range requests, and an 
 INSTALL httpfs; LOAD httpfs;
 INSTALL spatial; LOAD spatial;
 
-CREATE SECRET centia (TYPE http, BEARER_TOKEN 'abc123');
+CREATE SECRET gc2 (TYPE http, BEARER_TOKEN 'abc123');
 
 -- Count rows without downloading the file
 SELECT count(*)
-FROM read_parquet('https://api.centia.io/api/v4/schemas/geodanmark/relations/bygning/snapshots/2026-09-16/data');
+FROM read_parquet('https://api.gc2.io/api/v4/schemas/geodanmark/relations/bygning/snapshots/2026-09-16/data');
 
 -- Query attributes and geometry
 SELECT gid, ST_Area(the_geom) AS area
-FROM read_parquet('https://api.centia.io/api/v4/schemas/geodanmark/relations/bygning/snapshots/2026-09-16/data')
+FROM read_parquet('https://api.gc2.io/api/v4/schemas/geodanmark/relations/bygning/snapshots/2026-09-16/data')
 WHERE kommunekode = '0101';
 ```
 
@@ -429,16 +429,16 @@ A dashboard or notebook that should always see the current data reads the `lates
 
 ```sql title="Always the newest snapshot"
 SELECT count(*)
-FROM read_parquet('https://api.centia.io/api/v4/schemas/geodanmark/relations/bygning/snapshots/latest/data');
+FROM read_parquet('https://api.gc2.io/api/v4/schemas/geodanmark/relations/bygning/snapshots/latest/data');
 ```
 
 Combine several dates to compare them — `union_by_name` keeps this working when columns were added between snapshots:
 
 ```sql title="Rows that exist today but not yesterday"
 WITH today AS (
-    SELECT * FROM read_parquet('https://api.centia.io/api/v4/schemas/geodanmark/relations/bygning/snapshots/2026-09-16/data')
+    SELECT * FROM read_parquet('https://api.gc2.io/api/v4/schemas/geodanmark/relations/bygning/snapshots/2026-09-16/data')
 ), yesterday AS (
-    SELECT * FROM read_parquet('https://api.centia.io/api/v4/schemas/geodanmark/relations/bygning/snapshots/2026-09-15/data')
+    SELECT * FROM read_parquet('https://api.gc2.io/api/v4/schemas/geodanmark/relations/bygning/snapshots/2026-09-15/data')
 )
 SELECT count(*) FROM today WHERE gid NOT IN (SELECT gid FROM yesterday);
 ```
@@ -446,8 +446,8 @@ SELECT count(*) FROM today WHERE gid NOT IN (SELECT gid FROM yesterday);
 ```sql title="Several snapshots as one table"
 SELECT *
 FROM read_parquet([
-    'https://api.centia.io/api/v4/schemas/geodanmark/relations/bygning/snapshots/2026-09-15/data',
-    'https://api.centia.io/api/v4/schemas/geodanmark/relations/bygning/snapshots/2026-09-16/data'
+    'https://api.gc2.io/api/v4/schemas/geodanmark/relations/bygning/snapshots/2026-09-15/data',
+    'https://api.gc2.io/api/v4/schemas/geodanmark/relations/bygning/snapshots/2026-09-16/data'
 ], union_by_name = true);
 ```
 
@@ -458,7 +458,7 @@ Before joining two snapshots, compare their `schema_version` from the list endpo
 ```python title="GeoPandas"
 import io, requests, geopandas as gpd
 
-url = "https://api.centia.io/api/v4/schemas/geodanmark/relations/bygning/snapshots/2026-09-16/data"
+url = "https://api.gc2.io/api/v4/schemas/geodanmark/relations/bygning/snapshots/2026-09-16/data"
 r = requests.get(url, headers={"Authorization": "Bearer abc123"})
 r.raise_for_status()
 
@@ -473,7 +473,7 @@ The [flatgeobuf](https://github.com/flatgeobuf/flatgeobuf) JavaScript library st
 ```js title="Leaflet — stream the features in the current view"
 import { geojson } from 'flatgeobuf';
 
-const url = 'https://api.centia.io/api/v4/schemas/geodanmark/relations/bygning/snapshots/2026-09-16/data/flatgeobuf';
+const url = 'https://api.gc2.io/api/v4/schemas/geodanmark/relations/bygning/snapshots/2026-09-16/data/flatgeobuf';
 const headers = { Authorization: 'Bearer abc123' };
 
 async function loadView() {
@@ -491,7 +491,7 @@ DuckDB's `spatial` extension reads the same file with `ST_Read`, which is conven
 
 ```sql title="DuckDB"
 INSTALL spatial; LOAD spatial;
-SELECT count(*) FROM ST_Read('https://api.centia.io/api/v4/schemas/geodanmark/relations/bygning/snapshots/2026-09-16/data/flatgeobuf');
+SELECT count(*) FROM ST_Read('https://api.gc2.io/api/v4/schemas/geodanmark/relations/bygning/snapshots/2026-09-16/data/flatgeobuf');
 ```
 
 ### GDAL/OGR and QGIS
@@ -500,12 +500,12 @@ GDAL (3.5 or later, built with the Parquet driver) reads the file over HTTP thro
 
 ```bash title="ogrinfo over HTTP"
 GDAL_HTTP_HEADERS="Authorization: Bearer abc123" \
-ogrinfo -so -al "/vsicurl/https://api.centia.io/api/v4/schemas/geodanmark/relations/bygning/snapshots/2026-09-16/data"
+ogrinfo -so -al "/vsicurl/https://api.gc2.io/api/v4/schemas/geodanmark/relations/bygning/snapshots/2026-09-16/data"
 ```
 
 ```bash title="Convert a snapshot to GeoPackage"
 GDAL_HTTP_HEADERS="Authorization: Bearer abc123" \
-ogr2ogr bygning-2026-09-16.gpkg "/vsicurl/https://api.centia.io/api/v4/schemas/geodanmark/relations/bygning/snapshots/2026-09-16/data"
+ogr2ogr bygning-2026-09-16.gpkg "/vsicurl/https://api.gc2.io/api/v4/schemas/geodanmark/relations/bygning/snapshots/2026-09-16/data"
 ```
 
 The FlatGeobuf works the same way through `/data/flatgeobuf`; its spatial index lets `ogrinfo -spat` and QGIS fetch only the features in a bounding box.
@@ -516,7 +516,7 @@ A [scheduler](./scheduler.mdx) job can queue a snapshot automatically after each
 
 ## Self-hosting
 
-Snapshots are available on Centia Cloud out of the box. On a self-hosted [open source](./opensource.mdx) installation the feature is off until storage is configured:
+Snapshots are available on GC2 Cloud out of the box. On a self-hosted [open source](./opensource.mdx) installation the feature is off until storage is configured:
 
 - **Configuration** — the `snapshot` block in `App.php`: `storage` is `s3` (with `bucket`, `prefix`, `region`; credentials from the `s3` block) or `local` (with `localPath`); `download` is `proxy` (default) or `redirect`, `urlTtl` sets the presigned URL lifetime in seconds (default 300), and `formats` is the list of formats produced when a request names none (default `["parquet"]`). Without a configured storage the API answers `501` (`SNAPSHOT_NOT_CONFIGURED`).
 - **Worker** — the export runs from `app/scripts/snapshot_worker.php`, scheduled by cron every minute under `flock` (the official Docker image ships the crontab line). It needs `ogr2ogr` with the Parquet driver (GDAL 3.5 or later); the FlatGeobuf driver ships with GDAL 3.1 or later.

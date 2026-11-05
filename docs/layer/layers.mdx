@@ -1,6 +1,6 @@
 ---
 title: Layers
-description: Configure map layers in Centia.io. Set rendering properties and manage classes, styles and labels through the Layer API.
+description: Configure map layers in GC2. Set rendering properties and manage classes, styles and labels through the Layer API.
 sidebar_position: 10
 ---
 
@@ -25,18 +25,18 @@ A layer is identified by the key `schema.table.geometry_column`, e.g. `rockhall.
 
 <Tabs>
     <TabItem value="webapp" label="Web App">
-        ![View layers in the Centia Web App](/img/screenshots/webapp-placeholder.svg)
+        ![View layers in the GC2 Web App](/img/screenshots/webapp-placeholder.svg)
     </TabItem>
     <TabItem value="http" label="HTTP" default>
 
         ```http title="All layers"
-        GET https://api.centia.io/api/v4/layers HTTP/1.1
+        GET https://api.gc2.io/api/v4/layers HTTP/1.1
         Accept: application/json; charset=utf-8
         Authorization: Bearer abc123
         ```
 
         ```http title="A specific layer"
-        GET https://api.centia.io/api/v4/layers/rockhall.venues.the_geom HTTP/1.1
+        GET https://api.gc2.io/api/v4/layers/rockhall.venues.the_geom HTTP/1.1
         Accept: application/json; charset=utf-8
         Authorization: Bearer abc123
         ```
@@ -50,12 +50,12 @@ A layer is identified by the key `schema.table.geometry_column`, e.g. `rockhall.
 
 <Tabs>
     <TabItem value="webapp" label="Web App">
-        ![Configure layer in the Centia Web App](/img/screenshots/webapp-placeholder.svg)
+        ![Configure layer in the GC2 Web App](/img/screenshots/webapp-placeholder.svg)
     </TabItem>
     <TabItem value="http" label="HTTP" default>
 
         ```http title="Configure a layer with one class, style and label"
-        POST https://api.centia.io/api/v4/layers HTTP/1.1
+        POST https://api.gc2.io/api/v4/layers HTTP/1.1
         Content-Type: application/json
         Authorization: Bearer abc123
 
@@ -103,7 +103,7 @@ Classes, styles and labels each carry a fixed, server-assigned `id`. `POST /api/
 `PATCH` merges the keys you send into the layer's properties, leaving everything else — including classes — untouched:
 
 ```http title="Change opacity only"
-PATCH https://api.centia.io/api/v4/layers/rockhall.venues.the_geom HTTP/1.1
+PATCH https://api.gc2.io/api/v4/layers/rockhall.venues.the_geom HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer abc123
 
@@ -144,6 +144,6 @@ All values are stored as strings — an empty string means unset — except wher
 ## Delete a layer configuration
 
 ```http
-DELETE https://api.centia.io/api/v4/layers/rockhall.venues.the_geom HTTP/1.1
+DELETE https://api.gc2.io/api/v4/layers/rockhall.venues.the_geom HTTP/1.1
 Authorization: Bearer abc123
 ```

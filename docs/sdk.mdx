@@ -1,6 +1,6 @@
 ---
 title: SDK
-description: Official Centia.io JavaScript/TypeScript SDK — installation, requirements, authentication and token handling, error handling and environment details.
+description: Official GC2 JavaScript/TypeScript SDK — installation, requirements, authentication and token handling, error handling and environment details.
 sidebar_position: 87
 ---
 
@@ -9,7 +9,7 @@ import TabItem from '@theme/TabItem';
 
 # SDK
 
-`@centia-io/sdk` is the official TypeScript/JavaScript client SDK for Centia.io. This page covers installation and the general behavior shared by all SDK classes — each feature is documented on the page for the API it wraps:
+`@mapcentia/gc2-sdk` is the official TypeScript/JavaScript client SDK for GC2 (Geo Compute Cloud). This page covers installation and the general behavior shared by all SDK classes — each feature is documented on the page for the API it wraps:
 
 | Area | SDK classes/helpers | Documentation |
 |---|---|---|
@@ -27,17 +27,17 @@ import TabItem from '@theme/TabItem';
 <Tabs>
     <TabItem value="npm" label="npm" default>
         ```bash
-        npm install @centia-io/sdk
+        npm install @mapcentia/gc2-sdk
         ```
     </TabItem>
     <TabItem value="yarn" label="Yarn">
         ```bash
-        yarn add @centia-io/sdk
+        yarn add @mapcentia/gc2-sdk
         ```
     </TabItem>
     <TabItem value="pnpm" label="pnpm">
         ```bash
-        pnpm add @centia-io/sdk
+        pnpm add @mapcentia/gc2-sdk
         ```
     </TabItem>
 </Tabs>
@@ -45,17 +45,17 @@ import TabItem from '@theme/TabItem';
 Or from CDN:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@centia-io/sdk@latest/dist/centia-io-sdk.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mapcentia/gc2-sdk@latest/dist/centia-io-sdk.umd.js"></script>
 ```
 
 Requirements:
 - Browser or Node.js 18+ (for global `fetch`).
-- An accessible Centia.io host URL and client credentials.
+- An accessible GC2 host URL and client credentials.
 
 ESM import:
 ```ts
-import { CodeFlow, PasswordFlow, Sql, Rpc, Gql, Keyvalue, Features, createApi } from "@centia-io/sdk";
-import type { RpcRequest, RpcResponse, PgTypes } from "@centia-io/sdk";
+import { CodeFlow, PasswordFlow, Sql, Rpc, Gql, Keyvalue, Features, createApi } from "@mapcentia/gc2-sdk";
+import type { RpcRequest, RpcResponse, PgTypes } from "@mapcentia/gc2-sdk";
 ```
 
 ## Authentication and token handling

@@ -1,13 +1,13 @@
 ---
 title: Methods
-description: Store SQL on the server as named JSON-RPC methods in Centia.io, with type hints, output formats and SRS, and call them by name from clients, the SDK or the CLI.
+description: Store SQL on the server as named JSON-RPC methods in GC2, with type hints, output formats and SRS, and call them by name from clients, the SDK or the CLI.
 sidebar_position: 60
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-In the Centia.io API, instead of sending raw SQL every time you want to run a statement,
+In the GC2 (Geo Compute Cloud) API, instead of sending raw SQL every time you want to run a statement,
 you can **wrap your SQL statements inside JSON-RPC methods**.
 This means you define a **named method** which holds your SQL query along with optional instructions on how to
 interpret and format the data types.
@@ -41,7 +41,7 @@ select now() as date
 You can wrap it as a JSON-RPC method named with a date formatting hint: `getDate`
 
 ```http request
-POST  https://api.centia.io/api/v4/methods
+POST  https://api.gc2.io/api/v4/methods
 Content-Type: application/json
 Accept: application/json; charset=utf-8
 Authorization: Bearer abc123
@@ -96,7 +96,7 @@ The `result` property is similar to what the [SQL API](./statement) returns.
 The REST API is used like this:
 
 ```http request
-POST  https://api.centia.io/api/v4/call
+POST  https://api.gc2.io/api/v4/call
 Content-Type: application/json
 Accept: application/json; charset=utf-8
 Authorization: Bearer abc123
@@ -112,7 +112,7 @@ Authorization: Bearer abc123
 And the websocket API is used like this:
 
 ```javascript
-const socket = new WebSocket("wss://event.centia.io?token=abc123");
+const socket = new WebSocket("wss://event.gc2.io?token=abc123");
 socket.onopen = () => {
     socket.send(JSON.stringify({
       "jsonrpc": "2.0",
@@ -334,13 +334,13 @@ Clients should handle error responses gracefully by checking for the presence of
     <TabItem value="http" label="HTTP" default>
 
         ```http title="Get all methods"
-        GET https://api.centia.io/api/v4/methods HTTP/1.1
+        GET https://api.gc2.io/api/v4/methods HTTP/1.1
         Accept: application/json
         Authorization: Bearer abc123
         ```
 
         ```http title="Get a specific method"
-        GET https://api.centia.io/api/v4/methods/getDate HTTP/1.1
+        GET https://api.gc2.io/api/v4/methods/getDate HTTP/1.1
         Accept: application/json
         Authorization: Bearer abc123
         ```
@@ -349,11 +349,11 @@ Clients should handle error responses gracefully by checking for the presence of
     <TabItem value="cli" label="CLI">
 
         ```bash title="Get all methods"
-        centia rpc get
+        gc2 rpc get
         ```
 
         ```bash title="Get a specific method"
-        centia rpc get "getDate"
+        gc2 rpc get "getDate"
         ```
 
     </TabItem>
@@ -365,7 +365,7 @@ Clients should handle error responses gracefully by checking for the presence of
     <TabItem value="http" label="HTTP" default>
 
         ```http title="Update a method"
-        PATCH https://api.centia.io/api/v4/methods/getDate HTTP/1.1
+        PATCH https://api.gc2.io/api/v4/methods/getDate HTTP/1.1
         Content-Type: application/json
         Authorization: Bearer abc123
 
@@ -381,7 +381,7 @@ Clients should handle error responses gracefully by checking for the presence of
     <TabItem value="cli" label="CLI">
 
         ```bash title="Update a method"
-        centia rpc update "getDate"
+        gc2 rpc update "getDate"
         ```
 
     </TabItem>
@@ -393,12 +393,12 @@ Clients should handle error responses gracefully by checking for the presence of
     <TabItem value="http" label="HTTP" default>
 
         ```http title="Delete a method"
-        DELETE https://api.centia.io/api/v4/methods/getDate HTTP/1.1
+        DELETE https://api.gc2.io/api/v4/methods/getDate HTTP/1.1
         Authorization: Bearer abc123
         ```
 
         ```http title="Delete multiple methods"
-        DELETE https://api.centia.io/api/v4/methods/getDate,getDatePlusDays HTTP/1.1
+        DELETE https://api.gc2.io/api/v4/methods/getDate,getDatePlusDays HTTP/1.1
         Authorization: Bearer abc123
         ```
 
@@ -406,7 +406,7 @@ Clients should handle error responses gracefully by checking for the presence of
     <TabItem value="cli" label="CLI">
 
         ```bash title="Delete a method"
-        centia rpc drop "getDate"
+        gc2 rpc drop "getDate"
         ```
 
     </TabItem>
@@ -418,14 +418,14 @@ The [SDK](./sdk) calls JSON-RPC methods through the `Rpc` class:
 
 - Class: `new Rpc()`
 - Method: `call(request: RpcRequest): Promise<RpcResponse>`
-- Endpoint: `POST https://api.centia.io/api/v4/call`
+- Endpoint: `POST https://api.gc2.io/api/v4/call`
 
 Types (simplified):
 - `RpcRequest` has `jsonrpc: "2.0"`, `method`, optional `params`, optional `id`
 - `RpcResponse` has `jsonrpc: "2.0"`, `id`, and `result` with `{ schema, data }`
 
 ```ts
-import { Rpc } from "@centia-io/sdk";
+import { Rpc } from "@mapcentia/gc2-sdk";
 
 const rpc = new Rpc();
 
@@ -444,7 +444,7 @@ console.log(res.result.data); // array of rows
 
 Typing the rows:
 ```ts
-import type { PgTypes } from "@centia-io/sdk";
+import type { PgTypes } from "@mapcentia/gc2-sdk";
 
 interface Row extends PgTypes.DataRow {
   a: number;
@@ -461,8 +461,8 @@ A tiny helper that builds a Proxy around `Rpc` so you can call `api.someMethod(p
 Under the hood, each property access becomes a JSON-RPC call with the property name as the method. The helper returns `result.data` (array of rows) from the RPC response.
 
 ```ts
-import { createApi } from "@centia-io/sdk";
-import type { PgTypes, RowOfApiMethod } from "@centia-io/sdk";
+import { createApi } from "@mapcentia/gc2-sdk";
+import type { PgTypes, RowOfApiMethod } from "@mapcentia/gc2-sdk";
 
 // Define the shape of your RPC methods and return types
 // Don't write this by hand. Get the interfaces from /api/v4/interfaces
@@ -529,7 +529,7 @@ export interface Api {
 3) Dry run the request to set the types. Types are only inferred for dry run calls. This will cache the types on the server:
 
 ```http request
-POST https://api.centia.io/api/v4/call/dry
+POST https://api.gc2.io/api/v4/call/dry
 Content-Type: application/json
 Accept: application/json; charset=utf-8
 Authorization: Bearer abc123
@@ -558,7 +558,7 @@ export interface Api {
 ```
 
 ```ts title="main.ts"
-import { createApi } from "@centia-io/sdk"
+import { createApi } from "@mapcentia/gc2-sdk"
 import type { Api } from "./api"
 
 const api = createApi<Api>()

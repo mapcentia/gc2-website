@@ -9,7 +9,7 @@ import TabItem from '@theme/TabItem';
 
 Where [Methods](./methods) let you wrap **SQL** in a named, callable unit,
 **Functions** let you do the same with **code**. A function is a named piece of
-Node.js or Python that Centia.io runs for you — on demand, on a schedule, or when
+Node.js or Python that GC2 (Geo Compute Cloud) runs for you — on demand, on a schedule, or when
 a table changes — inside an isolated sandbox.
 
 ### Why use functions?
@@ -18,7 +18,7 @@ a table changes — inside an isolated sandbox.
   send a notification, compute something bespoke.
 - **Secure by default:** your code runs in a sandbox, isolated from other tenants.
 - **First-class data access:** each invocation gets a short-lived, scoped token so
-  your handler can call the Centia.io API back with **your own privileges** —
+  your handler can call the GC2 API back with **your own privileges** —
   [rules](./rules) and geofencing still apply.
 - **Event-driven:** trigger a function from a cron schedule or a row change.
 - **Typed clients:** infer input/output types from a dry-run and generate a
@@ -61,7 +61,7 @@ Post a function definition. `code` is the inline source (see
     <TabItem value="http" label="HTTP" default>
 
         ```http request
-        POST https://api.centia.io/api/v4/functions
+        POST https://api.gc2.io/api/v4/functions
         Content-Type: application/json
         Authorization: Bearer abc123
 
@@ -79,7 +79,7 @@ Post a function definition. `code` is the inline source (see
     <TabItem value="cli" label="CLI">
 
         ```bash
-        centia function create "greet"
+        gc2 function create "greet"
         ```
 
     </TabItem>
@@ -105,7 +105,7 @@ this is **synchronous** — the handler runs and the result is returned.
     <TabItem value="http" label="HTTP" default>
 
         ```http request
-        POST https://api.centia.io/api/v4/functions/greet/invocations
+        POST https://api.gc2.io/api/v4/functions/greet/invocations
         Content-Type: application/json
         Authorization: Bearer abc123
 
@@ -116,7 +116,7 @@ this is **synchronous** — the handler runs and the result is returned.
     <TabItem value="cli" label="CLI">
 
         ```bash
-        centia function invoke "greet" --data '{"name":"Ada"}'
+        gc2 function invoke "greet" --data '{"name":"Ada"}'
         ```
 
     </TabItem>
@@ -141,7 +141,7 @@ invocation and return immediately with `202 Accepted`. A background worker runs
 it; poll the invocation to get the result.
 
 ```http request
-POST https://api.centia.io/api/v4/functions/greet/invocations?async=true
+POST https://api.gc2.io/api/v4/functions/greet/invocations?async=true
 Content-Type: application/json
 Authorization: Bearer abc123
 
@@ -155,7 +155,7 @@ Authorization: Bearer abc123
 Check status:
 
 ```http request
-GET https://api.centia.io/api/v4/functions/greet/invocations/b1f0… HTTP/1.1
+GET https://api.gc2.io/api/v4/functions/greet/invocations/b1f0… HTTP/1.1
 Authorization: Bearer abc123
 ```
 
@@ -163,11 +163,11 @@ Authorization: Bearer abc123
 { "invocation": "b1f0…", "function": "greet", "status": "succeeded", "response": { "greeting": "Hello, Ada!" } }
 ```
 
-## Calling Centia.io from your function
+## Calling GC2 from your function
 
 Every invocation receives a short-lived, scoped token in
 `context.token` and the API base URL in `context.apiBaseUrl`. Use them to call the
-Centia.io API back — the request runs with **your** privileges, so
+GC2 API back — the request runs with **your** privileges, so
 [rules](./rules) and geofencing are enforced automatically.
 
 <Tabs>
@@ -220,7 +220,7 @@ updating a function.
 Run on a cron schedule (five-field cron expression).
 
 ```http request
-POST https://api.centia.io/api/v4/functions
+POST https://api.gc2.io/api/v4/functions
 Content-Type: application/json
 Authorization: Bearer abc123
 
@@ -241,7 +241,7 @@ Run when rows change in a table. `on` may contain any of `insert`, `update`,
 `delete` (defaults to all).
 
 ```http request
-POST https://api.centia.io/api/v4/functions
+POST https://api.gc2.io/api/v4/functions
 Content-Type: application/json
 Authorization: Bearer abc123
 
@@ -279,7 +279,7 @@ is extracted and the `handler` entry file is resolved inside it (Node resolves
 relative and `node_modules` imports; Python can import sibling modules).
 
 ```http request
-POST https://api.centia.io/api/v4/functions
+POST https://api.gc2.io/api/v4/functions
 Content-Type: application/json
 Authorization: Bearer abc123
 
@@ -295,11 +295,11 @@ Authorization: Bearer abc123
 ## Typed clients (dry-run + TypeScript)
 
 Functions are opaque code, so their input/output types are learned from a
-**dry-run**: invoke once with a representative event and Centia.io infers and
+**dry-run**: invoke once with a representative event and GC2 infers and
 stores the input and output type shapes.
 
 ```http request
-POST https://api.centia.io/api/v4/functions/greet/invocations?dry=true
+POST https://api.gc2.io/api/v4/functions/greet/invocations?dry=true
 Content-Type: application/json
 Authorization: Bearer abc123
 
@@ -312,7 +312,7 @@ Authorization: Bearer abc123
 Then fetch a generated TypeScript interface for all your functions:
 
 ```http request
-GET https://api.centia.io/api/v4/function-interfaces HTTP/1.1
+GET https://api.gc2.io/api/v4/function-interfaces HTTP/1.1
 Accept: text/plain
 Authorization: Bearer abc123
 ```
@@ -331,13 +331,13 @@ Functions without a dry-run fall back to `Record<string, unknown>` / `unknown`.
     <TabItem value="http" label="HTTP" default>
 
         ```http title="Get all functions"
-        GET https://api.centia.io/api/v4/functions HTTP/1.1
+        GET https://api.gc2.io/api/v4/functions HTTP/1.1
         Accept: application/json
         Authorization: Bearer abc123
         ```
 
         ```http title="Get a specific function"
-        GET https://api.centia.io/api/v4/functions/greet HTTP/1.1
+        GET https://api.gc2.io/api/v4/functions/greet HTTP/1.1
         Accept: application/json
         Authorization: Bearer abc123
         ```
@@ -346,11 +346,11 @@ Functions without a dry-run fall back to `Record<string, unknown>` / `unknown`.
     <TabItem value="cli" label="CLI">
 
         ```bash title="Get all functions"
-        centia function get
+        gc2 function get
         ```
 
         ```bash title="Get a specific function"
-        centia function get "greet"
+        gc2 function get "greet"
         ```
 
     </TabItem>
@@ -364,7 +364,7 @@ Changing the code bumps the function's `version`.
     <TabItem value="http" label="HTTP" default>
 
         ```http title="Update a function"
-        PATCH https://api.centia.io/api/v4/functions/greet HTTP/1.1
+        PATCH https://api.gc2.io/api/v4/functions/greet HTTP/1.1
         Content-Type: application/json
         Authorization: Bearer abc123
 
@@ -378,7 +378,7 @@ Changing the code bumps the function's `version`.
     <TabItem value="cli" label="CLI">
 
         ```bash title="Update a function"
-        centia function update "greet"
+        gc2 function update "greet"
         ```
 
     </TabItem>
@@ -390,7 +390,7 @@ Changing the code bumps the function's `version`.
     <TabItem value="http" label="HTTP" default>
 
         ```http title="Delete a function"
-        DELETE https://api.centia.io/api/v4/functions/greet HTTP/1.1
+        DELETE https://api.gc2.io/api/v4/functions/greet HTTP/1.1
         Authorization: Bearer abc123
         ```
 
@@ -398,7 +398,7 @@ Changing the code bumps the function's `version`.
     <TabItem value="cli" label="CLI">
 
         ```bash title="Delete a function"
-        centia function drop "greet"
+        gc2 function drop "greet"
         ```
 
     </TabItem>

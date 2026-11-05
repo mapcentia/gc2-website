@@ -25,12 +25,12 @@ The API is token-only: all requests require an `Authorization: Bearer` header.
 
 <Tabs>
     <TabItem value="webapp" label="Web App">
-        ![Key/value list in the Centia Web App](/img/screenshots/webapp-placeholder.svg)
+        ![Key/value list in the GC2 Web App](/img/screenshots/webapp-placeholder.svg)
     </TabItem>
     <TabItem value="http" label="HTTP" default>
 
         ```http title="Request"
-        GET https://api.centia.io/api/v4/keyvalue HTTP/1.1
+        GET https://api.gc2.io/api/v4/keyvalue HTTP/1.1
         Accept: application/json; charset=utf-8
         Authorization: Bearer abc123
         ```
@@ -70,12 +70,12 @@ The API is token-only: all requests require an `Authorization: Bearer` header.
 
 <Tabs>
     <TabItem value="webapp" label="Web App">
-        ![Key/value entry in the Centia Web App](/img/screenshots/webapp-placeholder.svg)
+        ![Key/value entry in the GC2 Web App](/img/screenshots/webapp-placeholder.svg)
     </TabItem>
     <TabItem value="http" label="HTTP" default>
 
         ```http title="Request"
-        GET https://api.centia.io/api/v4/keyvalue/app_settings HTTP/1.1
+        GET https://api.gc2.io/api/v4/keyvalue/app_settings HTTP/1.1
         Accept: application/json; charset=utf-8
         Authorization: Bearer abc123
         ```
@@ -103,7 +103,7 @@ The API is token-only: all requests require an `Authorization: Bearer` header.
 Instead of fetching the whole document, the `paths` query parameter projects only the named sub-trees of the value. Paths are comma-separated; a dot navigates into nested objects. The result `value` is keyed by each path string:
 
 ```http title="Request"
-GET https://api.centia.io/api/v4/keyvalue/app_settings?paths=band.name,theme HTTP/1.1
+GET https://api.gc2.io/api/v4/keyvalue/app_settings?paths=band.name,theme HTTP/1.1
 Accept: application/json; charset=utf-8
 Authorization: Bearer abc123
 ```
@@ -129,12 +129,12 @@ An empty path or path segment is rejected with `400` (`INVALID_PATHS`).
 
 <Tabs>
     <TabItem value="webapp" label="Web App">
-        ![Create key/value entry in the Centia Web App](/img/screenshots/webapp-placeholder.svg)
+        ![Create key/value entry in the GC2 Web App](/img/screenshots/webapp-placeholder.svg)
     </TabItem>
     <TabItem value="http" label="HTTP" default>
 
         ```http title="Request"
-        POST https://api.centia.io/api/v4/keyvalue/app_settings HTTP/1.1
+        POST https://api.gc2.io/api/v4/keyvalue/app_settings HTTP/1.1
         Content-Type: application/json
         Authorization: Bearer abc123
 
@@ -158,12 +158,12 @@ An empty path or path segment is rejected with `400` (`INVALID_PATHS`).
 
 <Tabs>
     <TabItem value="webapp" label="Web App">
-        ![Update key/value entry in the Centia Web App](/img/screenshots/webapp-placeholder.svg)
+        ![Update key/value entry in the GC2 Web App](/img/screenshots/webapp-placeholder.svg)
     </TabItem>
     <TabItem value="http" label="HTTP" default>
 
         ```http title="Make the entry public"
-        PATCH https://api.centia.io/api/v4/keyvalue/app_settings HTTP/1.1
+        PATCH https://api.gc2.io/api/v4/keyvalue/app_settings HTTP/1.1
         Content-Type: application/json
         Authorization: Bearer abc123
 
@@ -181,12 +181,12 @@ An empty path or path segment is rejected with `400` (`INVALID_PATHS`).
 
 <Tabs>
     <TabItem value="webapp" label="Web App">
-        ![Delete key/value entry in the Centia Web App](/img/screenshots/webapp-placeholder.svg)
+        ![Delete key/value entry in the GC2 Web App](/img/screenshots/webapp-placeholder.svg)
     </TabItem>
     <TabItem value="http" label="HTTP" default>
 
         ```http title="Request"
-        DELETE https://api.centia.io/api/v4/keyvalue/app_settings HTTP/1.1
+        DELETE https://api.gc2.io/api/v4/keyvalue/app_settings HTTP/1.1
         Authorization: Bearer abc123
         ```
 
@@ -195,10 +195,10 @@ An empty path or path segment is rejected with `400` (`INVALID_PATHS`).
 
 ## Using the SDK
 
-The [`@centia-io/sdk`](./sdk.mdx) (0.2.10+) exposes the store through the `Keyvalue` class. The stored value can be typed, and errors are thrown as `CentiaApiError` with `.status` and `.code`:
+The [`@mapcentia/gc2-sdk`](./sdk.mdx) (0.2.10+) exposes the store through the `Keyvalue` class. The stored value can be typed, and errors are thrown as `CentiaApiError` with `.status` and `.code`:
 
 ```ts
-import { createCentiaClient, Keyvalue } from '@centia-io/sdk'
+import { createCentiaClient, Keyvalue } from '@mapcentia/gc2-sdk'
 
 const kv = new Keyvalue(createCentiaClient({ baseUrl, auth: { getAccessToken } }))
 

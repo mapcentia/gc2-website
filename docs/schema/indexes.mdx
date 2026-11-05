@@ -1,6 +1,6 @@
 ---
 title: Indices
-description: Create btree, gin, gist, brin and hash indices on Centia.io tables through the Index API to speed up queries and spatial operations, and inspect or drop them.
+description: Create btree, gin, gist, brin and hash indices on GC2 tables through the Index API to speed up queries and spatial operations, and inspect or drop them.
 sidebar_position: 40
 ---
 
@@ -9,7 +9,7 @@ import TabItem from '@theme/TabItem';
 
 # Indices
 
-An index is a data structure the database maintains next to a [table](./tables.mdx) so that lookups, joins and sorts on the indexed [columns](./columns.mdx) do not have to scan every row. On a Centia.io table you typically add a btree index on columns used in `where` clauses and joins, a gist index on a geometry column so spatial queries and map rendering through the [OGC services](../ogc/services.mdx) stay fast, and a gin index for JSON or array columns. The Index API adds, inspects and drops indices; they can also be declared inline when a table is created.
+An index is a data structure the database maintains next to a [table](./tables.mdx) so that lookups, joins and sorts on the indexed [columns](./columns.mdx) do not have to scan every row. On a GC2 (Geo Compute Cloud) table you typically add a btree index on columns used in `where` clauses and joins, a gist index on a geometry column so spatial queries and map rendering through the [OGC services](../ogc/services.mdx) stay fast, and a gin index for JSON or array columns. The Index API adds, inspects and drops indices; they can also be declared inline when a table is created.
 
 Indices in a database use a similar approach as in most non-fiction books: terms and concepts that are frequently looked
 up by readers are collected in an alphabetic index at the end of the book. The interested reader can scan the index
@@ -23,12 +23,12 @@ An index can be of either type btree, brin, gin, gist or hash.
 
 <Tabs>
     <TabItem value="webapp" label="Web App">
-        ![Add index in the Centia Web App](/img/screenshots/webapp-placeholder.svg)
+        ![Add index in the GC2 Web App](/img/screenshots/webapp-placeholder.svg)
     </TabItem>
     <TabItem value="http" label="HTTP" default>
 
         ```http title="Create an index"
-        POST https://api.centia.io/api/v4/schemas/rockhall/tables/inductees/indices HTTP/1.1
+        POST https://api.gc2.io/api/v4/schemas/rockhall/tables/inductees/indices HTTP/1.1
         Content-Type: application/json
         Authorization: Bearer abc123
 
@@ -43,7 +43,7 @@ An index can be of either type btree, brin, gin, gist or hash.
     <TabItem value="cli" label="CLI">
 
         ```bash
-        centia index add "rockhall" "inductees" "id" btree "inductees-id-btree"
+        gc2 index add "rockhall" "inductees" "id" btree "inductees-id-btree"
         ```
 
     </TabItem>
@@ -55,18 +55,18 @@ You can either get a single index or a collection of indices.
 
 <Tabs>
     <TabItem value="webapp" label="Web App">
-        ![View indices in the Centia Web App](/img/screenshots/webapp-placeholder.svg)
+        ![View indices in the GC2 Web App](/img/screenshots/webapp-placeholder.svg)
     </TabItem>
     <TabItem value="http" label="HTTP" default>
 
         ```http title="All indices for a table"
-        GET https://api.centia.io/api/v4/schemas/rockhall/tables/inductees/indices HTTP/1.1
+        GET https://api.gc2.io/api/v4/schemas/rockhall/tables/inductees/indices HTTP/1.1
         Accept: application/json; charset=utf-8
         Authorization: Bearer abc123
         ```
 
         ```http title="Specific index by name"
-        GET https://api.centia.io/api/v4/schemas/rockhall/tables/inductees/indices/my-btree-index-on-id HTTP/1.1
+        GET https://api.gc2.io/api/v4/schemas/rockhall/tables/inductees/indices/my-btree-index-on-id HTTP/1.1
         Accept: application/json; charset=utf-8
         Authorization: Bearer abc123
         ```
@@ -75,7 +75,7 @@ You can either get a single index or a collection of indices.
     <TabItem value="cli" label="CLI">
 
         ```bash
-        centia index get "rockhall" "inductees" "btree-on-id"
+        gc2 index get "rockhall" "inductees" "btree-on-id"
         ```
 
     </TabItem>
@@ -95,19 +95,19 @@ An index object looks like this.
 
 <Tabs>
     <TabItem value="webapp" label="Web App">
-        ![Delete index in the Centia Web App](/img/screenshots/webapp-placeholder.svg)
+        ![Delete index in the GC2 Web App](/img/screenshots/webapp-placeholder.svg)
     </TabItem>
     <TabItem value="http" label="HTTP" default>
 
         ```http title="Delete index by name"
-        DELETE https://api.centia.io/api/v4/schemas/rockhall/tables/inductees/indices/inductees-id-btree HTTP/1.1
+        DELETE https://api.gc2.io/api/v4/schemas/rockhall/tables/inductees/indices/inductees-id-btree HTTP/1.1
         ```
 
     </TabItem>
     <TabItem value="cli" label="CLI">
 
         ```bash
-        centia index drop "rockhall" "inductees" "id" "inductees-id-btree"
+        gc2 index drop "rockhall" "inductees" "id" "inductees-id-btree"
         ```
 
     </TabItem>

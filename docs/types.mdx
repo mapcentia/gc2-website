@@ -1,12 +1,12 @@
 ---
 title: Types
-description: How PostgreSQL and PostGIS data types are sent and returned through the Centia.io SQL API, covering parameter casts, type_hints, type_formats and examples for every type family.
+description: How PostgreSQL and PostGIS data types are sent and returned through the GC2 SQL API, covering parameter casts, type_hints, type_formats and examples for every type family.
 sidebar_position: 40
 ---
 
 # Types
 
-Every [column](./schema/columns.mdx) in a Centia.io table has a PostgreSQL data type, and that type decides how a value must be passed as a parameter to the [SQL API](./statement.mdx) and how it comes back in the JSON response. Numbers and text are straightforward, but dates, intervals, JSON, arrays, ranges and PostGIS geometries each have conventions for casting parameters, giving the server type hints and choosing an output format.
+Every [column](./schema/columns.mdx) in a GC2 (Geo Compute Cloud) table has a PostgreSQL data type, and that type decides how a value must be passed as a parameter to the [SQL API](./statement.mdx) and how it comes back in the JSON response. Numbers and text are straightforward, but dates, intervals, JSON, arrays, ranges and PostGIS geometries each have conventions for casting parameters, giving the server type hints and choosing an output format.
 
 This page is the reference for those conventions, organised by type family. Use it when a parameter is rejected, when a timestamp comes back in a format you did not expect, or when you need to send a geometry or an array. The same `type_hints` and `type_formats` options are available when defining [methods](./methods.mdx), so a query's typing can be fixed once on the server.
 
@@ -40,7 +40,7 @@ Numeric data types are used for storing numeric values, including integers, deci
 
 
 ```http request title="Example request, numeric types"
-POST https://api.centia.io/api/v4/sql
+POST https://api.gc2.io/api/v4/sql
 Content-Type: application/json
 Accept: application/json; charset=utf-8
 Authorization: Bearer Bearer abc123
@@ -118,7 +118,7 @@ Character data types are used to store text values or strings.
 
 
 ```http request
-POST https://api.centia.io/api/v4/sql
+POST https://api.gc2.io/api/v4/sql
 Content-Type: application/json
 Accept: application/json; charset=utf-8
 Authorization: Bearer abc123
@@ -175,7 +175,7 @@ The boolean type holds logical values. It can be `true`, `false`, or `null`.
 
 
 ```http request
-POST https://api.centia.io/api/v4/sql
+POST https://api.gc2.io/api/v4/sql
 Content-Type: application/json
 Accept: application/json; charset=utf-8
 Authorization: Bearer abc123
@@ -214,7 +214,7 @@ JSON types are used to store and query JSON data in a structured format.
 
 
 ```http request
-POST https://api.centia.io/api/v4/sql
+POST https://api.gc2.io/api/v4/sql
 Content-Type: application/json
 Accept: application/json; charset=utf-8
 Authorization: Bearer abc123
@@ -273,7 +273,7 @@ Date and time data types are used to store temporal data, including dates, times
 - `interval`: Represents a duration of time, useful for calculating time differences.
 
 ```http request
-POST https://api.centia.io/api/v4/sql
+POST https://api.gc2.io/api/v4/sql
 Content-Type: application/json
 Accept: application/json; charset=utf-8
 Authorization: Bearer abc123
@@ -375,7 +375,7 @@ Geometric data types are used to store geometric calculations and spatial data l
 
 
 ```http request
-POST https://api.centia.io/api/v4/sql
+POST https://api.gc2.io/api/v4/sql
 Content-Type: application/json
 Accept: application/json; charset=utf-8
 Authorization: Bearer abc123
@@ -713,7 +713,7 @@ Authorization: Bearer abc123
 Array types allow storing multiple values of the same data type in a single column.
 
 ```http request
-POST https://api.centia.io/api/v4/sql
+POST https://api.gc2.io/api/v4/sql
 Content-Type: application/json
 Accept: application/json; charset=utf-8
 Authorization: Bearer abc123

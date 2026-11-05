@@ -21,8 +21,8 @@ The same layers are also available through the newer, RESTful [OGC API](./api.md
 Each service has a single endpoint, qualified by schema and database:
 
 ```
-https://api.centia.io/api/v4/ows/schema/{schema}/database/{database}
-https://api.centia.io/api/v4/wfs/schema/{schema}/database/{database}
+https://api.gc2.io/api/v4/ows/schema/{schema}/database/{database}
+https://api.gc2.io/api/v4/wfs/schema/{schema}/database/{database}
 ```
 
 The `/ows` endpoint is a combined read-only endpoint serving WMS, WFS and UTFGRID requests. The `/wfs` endpoint additionally accepts XML-encoded `POST` requests for `GetFeature` and WFS-T transactions.
@@ -30,7 +30,7 @@ The `/ows` endpoint is a combined read-only endpoint serving WMS, WFS and UTFGRI
 The WFS endpoint accepts an optional `srs` path segment to reproject the output to a specific EPSG code, and an optional `ts` segment (ISO date) for versioned layers:
 
 ```
-https://api.centia.io/api/v4/wfs/schema/{schema}/database/{database}/srs/{srs}
+https://api.gc2.io/api/v4/wfs/schema/{schema}/database/{database}/srs/{srs}
 ```
 
 ### Authentication
@@ -50,14 +50,14 @@ Which layers a service exposes — and whether they can be read or written — f
 WMS renders map images on the server. Versions 1.1.0 and 1.3.0 are supported (with 1.3.0, use the `CRS` parameter instead of `SRS`). Start with `GetCapabilities` to see the available layers — the schema's bounding box in the capabilities document comes from the extent set with the [Map API](../map.mdx):
 
 ```http title="GetCapabilities"
-GET https://api.centia.io/api/v4/ows/schema/rockhall/database/mydb?SERVICE=WMS&VERSION=1.1.0&REQUEST=GetCapabilities HTTP/1.1
+GET https://api.gc2.io/api/v4/ows/schema/rockhall/database/mydb?SERVICE=WMS&VERSION=1.1.0&REQUEST=GetCapabilities HTTP/1.1
 Authorization: Bearer abc123
 ```
 
 Request a rendered map image with `GetMap`. Layers are named `schema.table`:
 
 ```http title="GetMap"
-GET https://api.centia.io/api/v4/ows/schema/rockhall/database/mydb?SERVICE=WMS&VERSION=1.1.0&REQUEST=GetMap&LAYERS=rockhall.venues&STYLES=&SRS=EPSG:3857&BBOX=1204164,7485240,1259200,7534200&WIDTH=1024&HEIGHT=768&FORMAT=image/png&TRANSPARENT=true HTTP/1.1
+GET https://api.gc2.io/api/v4/ows/schema/rockhall/database/mydb?SERVICE=WMS&VERSION=1.1.0&REQUEST=GetMap&LAYERS=rockhall.venues&STYLES=&SRS=EPSG:3857&BBOX=1204164,7485240,1259200,7534200&WIDTH=1024&HEIGHT=768&FORMAT=image/png&TRANSPARENT=true HTTP/1.1
 Authorization: Bearer abc123
 ```
 
@@ -68,12 +68,12 @@ The rendering — colors, symbols, scale visibility and labels — is controlled
 WFS versions 1.0.0 and 1.1.0 are supported with the operations `GetCapabilities`, `DescribeFeatureType` and `GetFeature`.
 
 ```http title="GetCapabilities"
-GET https://api.centia.io/api/v4/wfs/schema/rockhall/database/mydb?SERVICE=WFS&VERSION=1.1.0&REQUEST=GetCapabilities HTTP/1.1
+GET https://api.gc2.io/api/v4/wfs/schema/rockhall/database/mydb?SERVICE=WFS&VERSION=1.1.0&REQUEST=GetCapabilities HTTP/1.1
 Authorization: Bearer abc123
 ```
 
 ```http title="GetFeature"
-GET https://api.centia.io/api/v4/wfs/schema/rockhall/database/mydb?SERVICE=WFS&VERSION=1.1.0&REQUEST=GetFeature&TYPENAME=venues&MAXFEATURES=100&SRSNAME=EPSG:4326 HTTP/1.1
+GET https://api.gc2.io/api/v4/wfs/schema/rockhall/database/mydb?SERVICE=WFS&VERSION=1.1.0&REQUEST=GetFeature&TYPENAME=venues&MAXFEATURES=100&SRSNAME=EPSG:4326 HTTP/1.1
 Authorization: Bearer abc123
 ```
 
@@ -84,14 +84,14 @@ Authorization: Bearer abc123
 XML-encoded `GetFeature` and `Transaction` requests are sent with `POST` to the WFS endpoint. Transactions require `write` privilege on the table:
 
 ```http title="Insert a feature"
-POST https://api.centia.io/api/v4/wfs/schema/rockhall/database/mydb HTTP/1.1
+POST https://api.gc2.io/api/v4/wfs/schema/rockhall/database/mydb HTTP/1.1
 Content-Type: application/xml
 Authorization: Bearer abc123
 
 <wfs:Transaction version="1.1.0" service="WFS"
     xmlns:wfs="http://www.opengis.net/wfs"
     xmlns:gml="http://www.opengis.net/gml"
-    xmlns:rockhall="http://api.centia.io">
+    xmlns:rockhall="http://api.gc2.io">
     <wfs:Insert>
         <rockhall:venues>
             <rockhall:name>Whisky a Go Go</rockhall:name>
@@ -110,6 +110,6 @@ Authorization: Bearer abc123
 Add a WMS or WFS connection in QGIS with the same endpoints:
 
 1. In QGIS, choose **Layer → Add Layer → Add WMS/WMTS Layer…** (or **Add WFS Layer…**).
-2. Create a new connection with the URL `https://api.centia.io/api/v4/ows/schema/{schema}/database/{database}` (WMS) or `https://api.centia.io/api/v4/wfs/schema/{schema}/database/{database}` (WFS).
+2. Create a new connection with the URL `https://api.gc2.io/api/v4/ows/schema/{schema}/database/{database}` (WMS) or `https://api.gc2.io/api/v4/wfs/schema/{schema}/database/{database}` (WFS).
 3. If the layers are not publicly readable, enter a sub-user's name and password as Basic authentication.
 4. Connect and add the layers to your project.

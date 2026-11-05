@@ -1,6 +1,6 @@
 ---
 title: Tables
-description: Create, inspect, rename, move and delete tables in a Centia.io schema through the Table API, with nested columns, indices and constraints in one request.
+description: Create, inspect, rename, move and delete tables in a GC2 schema through the Table API, with nested columns, indices and constraints in one request.
 sidebar_position: 20
 ---
 
@@ -9,7 +9,7 @@ import TabItem from '@theme/TabItem';
 
 # Tables
 
-A table stores your data as rows under a fixed set of named [columns](./columns.mdx), each with a PostgreSQL data [type](../types.mdx). Tables live inside a [schema](./schemas.mdx) and are addressed as `schema.table` throughout Centia.io.
+A table stores your data as rows under a fixed set of named [columns](./columns.mdx), each with a PostgreSQL data [type](../types.mdx). Tables live inside a [schema](./schemas.mdx) and are addressed as `schema.table` throughout GC2 (Geo Compute Cloud).
 
 The Table API is the provisioning interface for tables: it creates a table, optionally with nested columns, [indices](./indexes.mdx) and [constraints](./constraints.mdx) in one request, reads its definition, renames it or moves it to another schema, and drops it. Once a table exists you read and write its rows with [SQL](../statement.mdx), GraphQL or the [Feature API](../features.mdx), and a table with a geometry column is automatically available as a map layer through the [OGC services](../ogc/services.mdx). Use this API from migrations, CLI scripts or the Web App when you need to change the structure of your data rather than its content.
 
@@ -19,12 +19,12 @@ A new table object can be empty (name is the only property) or contain nested co
 
 <Tabs>
     <TabItem value="webapp" label="Web App">
-        ![Create table in the Centia Web App](/img/screenshots/webapp-placeholder.svg)
+        ![Create table in the GC2 Web App](/img/screenshots/webapp-placeholder.svg)
     </TabItem>
     <TabItem value="http" label="HTTP" default>
 
         ```http title="Create new empty table"
-        POST https://api.centia.io/api/v4/schemas/rockhall HTTP/1.1
+        POST https://api.gc2.io/api/v4/schemas/rockhall HTTP/1.1
         Content-Type: application/json
         Authorization: Bearer abc123
 
@@ -37,7 +37,7 @@ A new table object can be empty (name is the only property) or contain nested co
     <TabItem value="cli" label="CLI">
 
         ```bash
-        centia table add "rockhall" "inductees"
+        gc2 table add "rockhall" "inductees"
         ```
 
 
@@ -51,18 +51,18 @@ columns, indices and constraints. Use the `namesOnly` parameter to omit nested o
 
 <Tabs>
     <TabItem value="webapp" label="Web App">
-        ![View tables in the Centia Web App](/img/screenshots/webapp-placeholder.svg)
+        ![View tables in the GC2 Web App](/img/screenshots/webapp-placeholder.svg)
     </TabItem>
     <TabItem value="http" label="HTTP" default>
 
         ```http title="All tables, names only"
-        GET https://api.centia.io/api/v4/schemas/rockhall/tables?namesOnly HTTP/1.1
+        GET https://api.gc2.io/api/v4/schemas/rockhall/tables?namesOnly HTTP/1.1
         Accept: application/json; charset=utf-8
         Authorization: Bearer abc123
         ```
 
         ```http title="Specific tables"
-        GET https://api.centia.io/api/v4/schemas/rockhall/tables/inductees,anothertable HTTP/1.1
+        GET https://api.gc2.io/api/v4/schemas/rockhall/tables/inductees,anothertable HTTP/1.1
         Accept: application/json; charset=utf-8
         Authorization: Bearer abc123
         ```
@@ -71,7 +71,7 @@ columns, indices and constraints. Use the `namesOnly` parameter to omit nested o
     <TabItem value="cli" label="CLI">
 
         ```bash
-        centia table get "rockhall" "inductees"
+        gc2 table get "rockhall" "inductees"
         ```
 
     </TabItem>
@@ -158,11 +158,11 @@ You can move a table to another schema by setting the `schema` property and rena
 
 <Tabs>
     <TabItem value="webapp" label="Web App">
-        ![Rename and move table in the Centia Web App](/img/screenshots/webapp-placeholder.svg)
+        ![Rename and move table in the GC2 Web App](/img/screenshots/webapp-placeholder.svg)
     </TabItem>
     <TabItem value="http" label="HTTP" default>
         ```http
-        PATCH https://api.centia.io/api/v4/schemas/rockhall/tables/inductees HTTP/1.1
+        PATCH https://api.gc2.io/api/v4/schemas/rockhall/tables/inductees HTTP/1.1
         Content-Type: application/json
         Authorization: Bearer abc123
 
@@ -174,10 +174,10 @@ You can move a table to another schema by setting the `schema` property and rena
     </TabItem>
     <TabItem value="cli" label="CLI">
         ```bash
-        centia schema rename "rock_roll_of_hall" "inductees" "members"
+        gc2 schema rename "rock_roll_of_hall" "inductees" "members"
         ```
         ```bash
-        centia schema move "rock_roll_of_hall" "inductees" "members"
+        gc2 schema move "rock_roll_of_hall" "inductees" "members"
         ```
     </TabItem>
 </Tabs>
@@ -186,17 +186,17 @@ You can move a table to another schema by setting the `schema` property and rena
 
 <Tabs>
     <TabItem value="webapp" label="Web App">
-        ![Delete table in the Centia Web App](/img/screenshots/webapp-placeholder.svg)
+        ![Delete table in the GC2 Web App](/img/screenshots/webapp-placeholder.svg)
     </TabItem>
     <TabItem value="http" label="HTTP" default>
         ```http
-        DELETE https://api.centia.io/api/v4/schemas/rockhall/tables/inductees HTTP/1.1
+        DELETE https://api.gc2.io/api/v4/schemas/rockhall/tables/inductees HTTP/1.1
         Authorization: Bearer abc123
         ```
     </TabItem>
     <TabItem value="cli" label="CLI">
         ```bash
-        centia table drop "rockhall" "inductees"
+        gc2 table drop "rockhall" "inductees"
         ```
     </TabItem>
 </Tabs>

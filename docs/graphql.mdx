@@ -1,6 +1,6 @@
 ---
 title: GraphQL
-description: Query and mutate Centia.io tables through a GraphQL schema generated from your database, with per-schema endpoints, nested selection and Bearer token authentication.
+description: Query and mutate GC2 tables through a GraphQL schema generated from your database, with per-schema endpoints, nested selection and Bearer token authentication.
 sidebar_position: 62
 ---
 
@@ -16,12 +16,12 @@ Use GraphQL when a client needs to pick exactly the fields it wants, fetch relat
 
 The HTTP endpoint is schema-specific (see [Schemas](/docs/schema/schemas) for more information):
 
-`POST https://api.centia.io/api/graphql/schema/{schema_name}`
+`POST https://api.gc2.io/api/graphql/schema/{schema_name}`
 
 Authentication is handled via a Bearer token in the `Authorization` header (see [OAuth](/docs/oauth) for more information).
 
 ```http request
-POST https://api.centia.io/api/graphql/schema/public
+POST https://api.gc2.io/api/graphql/schema/public
 Authorization: Bearer <your_token>
 Content-Type: application/json
 
@@ -35,7 +35,7 @@ Content-Type: application/json
 All GraphQL operations — queries, mutations, and subscriptions — are also available over WebSocket:
 
 ```
-wss://event.centia.io?token=<your_token>
+wss://event.gc2.io?token=<your_token>
 ```
 
 Send operations as JSON messages with `type`, `schema`, and `query`:
@@ -83,7 +83,7 @@ For every table in your database, the API provides a query field named `get[Tabl
 To fetch records from a table named `artists`:
 
 ```http request title="Request, basic query"
-POST https://api.centia.io/api/graphql/schema/public
+POST https://api.gc2.io/api/graphql/schema/public
 Content-Type: application/json
 Authorization: Bearer <your_token>
 
@@ -118,7 +118,7 @@ The `where` argument supports complex filtering using logical and comparison ope
 - `not`: Logical NOT
 
 ```http request title="Request, filtered query"
-POST https://api.centia.io/api/graphql/schema/public
+POST https://api.gc2.io/api/graphql/schema/public
 Content-Type: application/json
 Authorization: Bearer <your_token>
 
@@ -132,7 +132,7 @@ Authorization: Bearer <your_token>
 Use `limit` and `offset` for pagination.
 
 ```http request title="Request, pagination"
-POST https://api.centia.io/api/graphql/schema/public
+POST https://api.gc2.io/api/graphql/schema/public
 Content-Type: application/json
 Authorization: Bearer <your_token>
 
@@ -146,7 +146,7 @@ Authorization: Bearer <your_token>
 If there are foreign key constraints between tables, the GraphQL API automatically exposes them as nested fields.
 
 ```http request title="Request, relationships"
-POST https://api.centia.io/api/graphql/schema/public
+POST https://api.gc2.io/api/graphql/schema/public
 Content-Type: application/json
 Authorization: Bearer <your_token>
 
@@ -164,7 +164,7 @@ The API provides `insert`, `update`, and `delete` mutations for each table.
 Use `insert[TableName]` to add new records. You can provide a single record via `data` or multiple records via `objects`.
 
 ```http request title="Request, insert mutation"
-POST https://api.centia.io/api/graphql/schema/public
+POST https://api.gc2.io/api/graphql/schema/public
 Content-Type: application/json
 Authorization: Bearer <your_token>
 
@@ -178,7 +178,7 @@ Authorization: Bearer <your_token>
 Use `update[TableName]` to modify existing records. Use the `where` argument to specify which records to update and `data` for the new values.
 
 ```http request title="Request, update mutation"
-POST https://api.centia.io/api/graphql/schema/public
+POST https://api.gc2.io/api/graphql/schema/public
 Content-Type: application/json
 Authorization: Bearer <your_token>
 
@@ -192,7 +192,7 @@ Authorization: Bearer <your_token>
 Use `delete[TableName]` to remove records.
 
 ```http request title="Request, delete mutation"
-POST https://api.centia.io/api/graphql/schema/public
+POST https://api.gc2.io/api/graphql/schema/public
 Content-Type: application/json
 Authorization: Bearer <your_token>
 
@@ -288,7 +288,7 @@ The fields you select in the subscription body determine which columns are inclu
 
 ```javascript
 const ws = new WebSocket(
-  `wss://event.centia.io?token=${encodeURIComponent(token)}`
+  `wss://event.gc2.io?token=${encodeURIComponent(token)}`
 );
 
 ws.onopen = () => {
@@ -399,14 +399,14 @@ The [SDK](/docs/sdk) wraps the GraphQL API in the `Gql` class:
 
 - Class: `new Gql(schema: string)`
 - Method: `request(request: GqlRequest): Promise<GqlResponse>`
-- Endpoint: `POST https://api.centia.io/api/graphql/schema/{schema}`
+- Endpoint: `POST https://api.gc2.io/api/graphql/schema/{schema}`
 
 Types (simplified):
 - `GqlRequest` has `query`, optional `variables` and `operationName`
 - `GqlResponse` has `data` and optional `errors`
 
 ```ts title="GraphQL query"
-import { Gql, type GqlRequest, type GqlResponse } from "@centia-io/sdk"
+import { Gql, type GqlRequest, type GqlResponse } from "@mapcentia/gc2-sdk"
 
 const query = `
 query {
@@ -424,7 +424,7 @@ console.log(res)
 ```
 
 ```ts title="GraphQL mutation"
-import { Gql, type GqlRequest, type GqlResponse } from "@centia-io/sdk"
+import { Gql, type GqlRequest, type GqlResponse } from "@mapcentia/gc2-sdk"
 
 const query = `
 mutation UpdateBands($where: JSON, $data: JSON) {

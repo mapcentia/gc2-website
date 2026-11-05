@@ -1,6 +1,6 @@
 ---
 title: Schemas
-description: Create, inspect, rename and delete schemas in your Centia.io database through the Schema API, CLI or Web App, and see how schemas scope tables and sub-user access.
+description: Create, inspect, rename and delete schemas in your GC2 database through the Schema API, CLI or Web App, and see how schemas scope tables and sub-user access.
 sidebar_position: 10
 ---
 
@@ -9,9 +9,9 @@ import TabItem from '@theme/TabItem';
 
 # Schemas
 
-A schema is a named namespace inside your Centia.io database that groups [tables](./tables.mdx), views and [sequences](./sequences.mdx). Within one schema two tables cannot share a name, but the same table name can be reused in different schemas; `schema1.inductees` and `schema2.inductees` are distinct tables.
+A schema is a named namespace inside your GC2 (Geo Compute Cloud) database that groups [tables](./tables.mdx), views and [sequences](./sequences.mdx). Within one schema two tables cannot share a name, but the same table name can be reused in different schemas; `schema1.inductees` and `schema2.inductees` are distinct tables.
 
-In Centia.io the schema is also the unit of ownership and addressing. Every [sub-user](../users.mdx) owns a schema named after itself, and several APIs are schema-qualified: the [SQL API](../statement.mdx) and [GraphQL](../graphql.mdx) resolve unqualified table names within a schema, and the [OGC services](../ogc/services.mdx) expose one endpoint per schema. The Schema API below creates, lists, renames and deletes schemas, and a new schema can be created together with nested table definitions in a single request.
+In GC2 the schema is also the unit of ownership and addressing. Every [sub-user](../users.mdx) owns a schema named after itself, and several APIs are schema-qualified: the [SQL API](../statement.mdx) and [GraphQL](../graphql.mdx) resolve unqualified table names within a schema, and the [OGC services](../ogc/services.mdx) expose one endpoint per schema. The Schema API below creates, lists, renames and deletes schemas, and a new schema can be created together with nested table definitions in a single request.
 
 ## Add schema
 
@@ -19,12 +19,12 @@ A new schema object can be empty (name is the only property) or contain nested t
 
 <Tabs>
     <TabItem value="webapp" label="Web App">
-        ![Create schema in the Centia Web App](/img/screenshots/webapp-placeholder.svg)
+        ![Create schema in the GC2 Web App](/img/screenshots/webapp-placeholder.svg)
     </TabItem>
     <TabItem value="http" label="HTTP" default>
 
         ```http request title="Create new empty schema"
-        POST https://api.centia.io/api/v4/schemas HTTP/1.1
+        POST https://api.gc2.io/api/v4/schemas HTTP/1.1
         Content-Type: application/json
         Authorization: Bearer abc123
 
@@ -37,7 +37,7 @@ A new schema object can be empty (name is the only property) or contain nested t
     <TabItem value="cli" label="CLI">
 
         ```bash
-        centia schema add "rockhall"
+        gc2 schema add "rockhall"
         ```
 
     </TabItem>
@@ -50,18 +50,18 @@ tables, columns, indices and constraints. Use the `namesOnly` parameter to omit 
 
 <Tabs>
     <TabItem value="webapp" label="Web App">
-        ![View schemas in the Centia Web App](/img/screenshots/webapp-placeholder.svg)
+        ![View schemas in the GC2 Web App](/img/screenshots/webapp-placeholder.svg)
     </TabItem>
     <TabItem value="http" label="HTTP" default>
 
         ```http title="All schemas, names only"
-        GET https://api.centia.io/api/v4/schemas?namesOnly HTTP/1.1
+        GET https://api.gc2.io/api/v4/schemas?namesOnly HTTP/1.1
         Accept: application/json; charset=utf-8
         Authorization: Bearer abc123
         ```
 
         ```http title="Specific schemas"
-        GET https://api.centia.io/api/v4/schemas/rockhall,anotherschema HTTP/1.1
+        GET https://api.gc2.io/api/v4/schemas/rockhall,anotherschema HTTP/1.1
         Accept: application/json; charset=utf-8
         Authorization: Bearer abc123
         ```
@@ -70,7 +70,7 @@ tables, columns, indices and constraints. Use the `namesOnly` parameter to omit 
     <TabItem value="cli" label="CLI">
 
         ```bash
-        centia schema get "rockhall,anotherschema"
+        gc2 schema get "rockhall,anotherschema"
         ```
 
     </TabItem>
@@ -159,11 +159,11 @@ A schema object with nested objects looks like this.
 
 <Tabs>
     <TabItem value="webapp" label="Web App">
-        ![Rename schema in the Centia Web App](/img/screenshots/webapp-placeholder.svg)
+        ![Rename schema in the GC2 Web App](/img/screenshots/webapp-placeholder.svg)
     </TabItem>
     <TabItem value="http" label="HTTP" default>
         ```http
-        PATCH https://api.centia.io/api/v4/schemas/rockhall HTTP/1.1
+        PATCH https://api.gc2.io/api/v4/schemas/rockhall HTTP/1.1
         Content-Type: application/json
         Authorization: Bearer abc123
 
@@ -174,7 +174,7 @@ A schema object with nested objects looks like this.
     </TabItem>
     <TabItem value="cli" label="CLI">
         ```bash
-        centia schema rename "rockhall" "myschema2"
+        gc2 schema rename "rockhall" "myschema2"
         ```
     </TabItem>
 </Tabs>
@@ -187,17 +187,17 @@ Be careful when deleting schemas - all nested objects will also be deleted!
 
 <Tabs>
     <TabItem value="webapp" label="Web App">
-        ![Delete schema in the Centia Web App](/img/screenshots/webapp-placeholder.svg)
+        ![Delete schema in the GC2 Web App](/img/screenshots/webapp-placeholder.svg)
     </TabItem>
     <TabItem value="http" label="HTTP" default>
         ```http
-        DELETE https://api.centia.io/api/v4/schemas/rock_roll_of_hall HTTP/1.1
+        DELETE https://api.gc2.io/api/v4/schemas/rock_roll_of_hall HTTP/1.1
         Authorization: Bearer abc123
         ```
     </TabItem>
     <TabItem value="cli" label="CLI">
         ```bash
-        centia schema drop "rock_roll_of_hall"
+        gc2 schema drop "rock_roll_of_hall"
         ```
     </TabItem>
 </Tabs>
