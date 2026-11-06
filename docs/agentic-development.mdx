@@ -1,35 +1,109 @@
 ---
 title: Agentic Development
-description: Build on GC2 with AI coding agents through the Model Context Protocol server, which gives agents tools to inspect, provision and query your backend.
+description: Install the GC2 plugin in Claude Code or Codex to give AI coding agents MCP tools and skills for provisioning, querying and styling your GC2 backend.
 sidebar_position: 17
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Agentic Development with GC2
 
-Agentic development is a modern approach to software development where developers use AI agents to build applications through natural language and high-level abstractions. GC2 (Geo Compute Cloud) is built to be the perfect backend for this workflow, providing the tools and interfaces AI agents need to be productive.
+Agentic development is a way of building software where you describe what you want and an AI coding agent such as Claude Code or Codex does the implementation: it creates the data model, writes the application code and checks its own work. GC2 (Geo Compute Cloud) is built for this workflow. The **GC2 plugin** gives the agent two things it needs to be good at it: **MCP tools** that act on your backend, and **skills** that teach it how GC2 works and which tool to use when.
 
-## What is Agentic Development?
+## What is in the plugin
 
-Agentic development isn't about writing every line of code yourself. It's about:
-- **Natural Language First**: Describing what you want to build and letting AI agents handle the implementation details.
-- **Agent-Centric Workflow**: Using tools like Claude Code, Junie, or Windsurf that can "understand" your project and make changes.
-- **High-Level Abstractions**: Focusing on the "what" and "why" while the AI handles the "how".
+The plugin lives in the [mapcentia/gc2-plugin](https://github.com/mapcentia/gc2-plugin) repository and bundles:
 
-## The @mapcentia/gc2-mcp-server package
+- **The GC2 MCP server** (`@mapcentia/gc2-mcp-server`). A [Model Context Protocol](https://modelcontextprotocol.io) server whose tools are generated from the GC2 OpenAPI spec, so every v4 endpoint is available to the agent: schemas, tables, columns, constraints, indexes, SQL, users, privileges, rules, OAuth clients, file import, layers and styling, OGC services, snapshots, the scheduler, functions and key/value storage.
+- **Twenty skills**. Short, task-specific guides the agent loads on demand. `gc2-rules` is the entry point and holds the hard rules: tool priority (MCP tools > SDK > OpenAPI > docs), the boundary between runtime code and provisioning, security and auth baselines, and a confirmation policy for destructive operations. The other skills cover one workflow each, see the [list below](#skills).
+- **Plugin manifests** for Claude Code (`.claude-plugin/`) and Codex (`.codex-plugin/`), plus a marketplace named `mapcentia` so the plugin can be installed with one command.
 
-GC2 provides a dedicated **Model Context Protocol (MCP)** server that allows AI agents to interact directly with
-your GC2 backend. By connecting an AI agent to the `@mapcentia/gc2-mcp-server` server, you give it the ability to:
+With the plugin installed, an agent can build an application from scratch: design the schema, load data, set up users and access rules, style map layers and then write the frontend against the [SDK](./sdk.mdx), all from natural language.
 
-- **Manage Schemas**: Create and modify tables, columns, indexes, and constraints.
-- **Execute SQL**: Run queries and mutations directly against your database.
-- **Handle Auth**: Manage users, rules, and OAuth clients.
-- **Introspect**: Allow the agent to explore your database structure to better understand your data.
+## Install the plugin
 
-An AI agent can build an app from scratch with the necessary data models and authentication logic.
+The plugin uses your CLI session for authentication, so install the [CLI](./start.mdx#install-the-cli) and log in once:
 
-### Installing the MCP Server
+```bash
+npm install -g @mapcentia/gc2-cli
+gc2 login
+```
 
-You can add the GC2 MCP server to your AI agent (like Claude Code or Junie) using the following configuration:
+Then install the plugin in your agent.
+
+<Tabs>
+    <TabItem value="claude" label="Claude Code" default>
+
+        Add the MapCentia marketplace and install the plugin from inside Claude Code:
+
+        ```
+        /plugin marketplace add mapcentia/gc2-plugin
+        /plugin install gc2@mapcentia
+        ```
+
+        Start a new session. The MCP tools are available as `mcp__gc2__*`, and the skills as `/gc2:gc2-rules`, `/gc2:gc2-provisioning` and so on. Claude loads the relevant skill automatically on GC2 tasks; you rarely need to invoke them by name.
+
+        To try a local checkout without installing it:
+
+        ```bash
+        claude --plugin-dir /path/to/gc2-plugin
+        ```
+
+        :::note Upgrading from the Centia plugin
+        The plugin was published as `centia@centia-io` until version 1.0.36. Remove it first, then install as above:
+
+        ```
+        /plugin uninstall centia@centia-io
+        /plugin marketplace remove centia-io
+        ```
+
+        Skill names changed from `centia-*` to `gc2-*`, and the MCP tool prefix from `mcp__centia__` to `mcp__gc2__`.
+        :::
+
+    </TabItem>
+    <TabItem value="codex" label="Codex">
+
+        Add the marketplace and the plugin with the Codex CLI:
+
+        ```bash
+        codex plugin marketplace add mapcentia/gc2-plugin
+        codex plugin add gc2@mapcentia
+        ```
+
+        Restart Codex and start a new conversation to load the MCP tools and skills. In the Codex desktop app the plugin also appears under the **MapCentia** marketplace in the plugin browser once the marketplace is added.
+
+        Check the installation with:
+
+        ```bash
+        codex plugin list --marketplace mapcentia
+        ```
+
+        For the MCP tools alone, without the skills:
+
+        ```bash
+        codex mcp add gc2 -- npx -y @mapcentia/gc2-mcp-server
+        ```
+
+    </TabItem>
+</Tabs>
+
+## Other agents: the MCP server on its own
+
+Any MCP-capable agent (Claude Desktop, Junie, Windsurf, Cursor and others) can use the GC2 MCP server without the plugin. Add it to the agent's MCP configuration:
+
+```json
+{
+  "mcpServers": {
+    "gc2": {
+      "command": "npx",
+      "args": ["-y", "@mapcentia/gc2-mcp-server"]
+    }
+  }
+}
+```
+
+The server reads the session stored by `gc2 login`. To run it without the CLI, for example in CI, pass a token instead:
 
 ```json
 {
@@ -46,58 +120,50 @@ You can add the GC2 MCP server to your AI agent (like Claude Code or Junie) usin
 }
 ```
 
-### Configuration
-
-The server shares the configuration with the CLI, so you can just set the connection and login with CLI, and the MCP server is ready. But you can use the server without CLI, so the server accepts the following environment variables:
-
-- `API_BASE_URL` (optional) — Base URL for the GC2 API. Set it when using a self-hosted deployment. Default: `https://api.gc2.io`
-- `API_TOKEN` (optional) — Personal access token for GC2. Most endpoints/tools require authentication; set this to enable them.
+- `API_BASE_URL` (optional) — Base URL of the GC2 API. Set it for a self-hosted deployment. Default: `https://api.gc2.io`.
+- `API_TOKEN` (optional) — Access token used instead of the CLI session. Most tools require authentication.
 
 :::info
-Get your access token from the [console](/console).
+Get an access token from the [console](/console).
 :::
 
-## Agent Guide (AGENTS.md and skills)
+To give such an agent the skills as well, copy `AGENTS.md` and the `skills/` folder from the [plugin repository](https://github.com/mapcentia/gc2-plugin) to the root of your own application's repository. Agents that discover instructions through `AGENTS.md` (Junie, Codex without the plugin, and others) then find the rules on their own. For Claude Code without the plugin, copy `AGENTS.md` to `CLAUDE.md`.
 
-To ensure AI agents work effectively with GC2, we maintain a AGENTS.md file and Skills folder. These contain
-"Prime Directives" and "Hard Rules" that help agents choose the right tools for the job, whether it's using the SDK for
-runtime code or MCP tools for provisioning.
+## How the agent works with GC2
 
-`AGENTS.md` contains the core rules (tool priority, security baselines, destructive-ops policy), while each skill in `skills/*/SKILL.md` covers a specific workflow area.
+`gc2-rules` makes the agent follow a fixed priority, so it reaches for the right tool without being told each time:
 
-To ensure your AI agent follows these rules while developing your application:
+1. **GC2 MCP tools** for anything that changes or inspects the backend: schema changes, data import, users, rules, layers, snapshots, scheduler jobs.
+2. **`@mapcentia/gc2-sdk`** for application runtime code: SQL, JSON-RPC methods, GraphQL, realtime, features.
+3. **OpenAPI and plain HTTP** only when neither of the above covers the call.
 
-1. Copy `AGENTS.md` and the `skills/` folder from this [repository](https://github.com/mapcentia/gc2-plugin) to the root of **your own application's** repository.
-2. When starting a session with your AI agent, it will automatically find and follow the guidelines.
+Read tools run freely; write tools that drop or overwrite data ask for confirmation first. The agent is told to keep tokens out of frontend code and to use the right OAuth flow for each context.
 
-:::info
-In Claude Code, copy `AGENTS.md` to `CLAUDE.md`, because Claude Code automatically reads `CLAUDE.md`.
-:::
+## Skills
 
-**AGENTS.md** covers:
-- **Prime Directive**: Preferring MCP tools and official SDKs.
-- **Tool Priority**: Order of interaction (MCP tools > SDK > HTTP).
-- **Security & Auth**: How to handle tokens and OAuth flows correctly.
-- **Destructive Operations Policy**: Requiring explicit confirmation before destructive changes.
+| Skill | Use when |
+|---|---|
+| `gc2-rules` | Every GC2 task: hard rules, tool priority, destructive-ops policy, routing to the skills below |
+| `gc2-runtime-sdk` | Writing JS/TS runtime code with `@mapcentia/gc2-sdk` |
+| `gc2-provisioning` | Schemas, tables, columns, constraints, indexes, migrations |
+| `gc2-json-rpc` | Creating and calling [JSON-RPC methods](./methods.mdx), TypeScript interfaces |
+| `gc2-auth-model` | Auth across browser, backend, CLI and provisioning |
+| `gc2-types-formats` | PostgreSQL and PostGIS [types](./types.mdx), casts, type hints, output formats |
+| `gc2-file-import` | The two-step [file import](./import.mdx) workflow |
+| `gc2-feature` | Reading and writing single rows as GeoJSON through the [Feature API](./features.mdx) |
+| `gc2-keyvalue` | Small JSON state in the [key/value store](./keyvalue.mdx) |
+| `gc2-map-styling` | Map views, layers, classes, styles and labels |
+| `gc2-ows` | WMS, WFS and WFS-T, the MapCache proxy ([OGC services](./ogc/services.mdx)) |
+| `gc2-ogc` | OGC API Features and Maps ([OGC API](./ogc/api.mdx)) |
+| `gc2-schema-tiles` | Merged per-schema vector tilesets |
+| `gc2-tile-seeding` | Seeding and warming the tile cache |
+| `gc2-snapshots` | GeoParquet and FlatGeobuf [snapshots](./snapshots.mdx) and reading them with DuckDB |
+| `gc2-scheduler` | [Scheduled imports](./scheduler.mdx), jobs and runs |
+| `gc2-realtime` | WebSocket [change events](./realtime.mdx) and subscriptions |
+| `gc2-privileges` | Sub-user [privileges](./privileges.mdx), groups and rights inheritance |
+| `gc2-openapi-docs` | OpenAPI and docs fallback policy |
+| `gc2-delivery` | Delivery checklist and quality gate before handing work over |
 
-**Skills** (`skills/*/SKILL.md`) cover task-specific workflows:
-- `gc2-runtime-sdk` — Building JS/TS runtime code with `@mapcentia/gc2-sdk`
-- `gc2-provisioning` — Schema, tables, columns, constraints, indexes, migrations
-- `gc2-json-rpc` — JSON-RPC method lifecycle and TypeScript interfaces
-- `gc2-auth-model` — Auth across browser, backend, CLI, and provisioning
-- `gc2-types-formats` — PostgreSQL types, casts, type hints, output formats
-- `gc2-file-import` — File import workflow
-- `gc2-map-styling` — Map view configuration and layer cartography (classes, styles, labels)
-- `gc2-privileges` — Sub-user privileges, groups and rights inheritance
-- `gc2-openapi-docs` — OpenAPI and docs fallback policy
-- `gc2-delivery` — Delivery checklist and quality gate
+The plugin also ships `danish-search`, a skill for the `@mapcentia/danish-search` address and cadastral search component.
 
-### Key Takeaways for Agents
-
-When an agent is working in an agentic development environment with GC2, it follows these priorities:
-
-1. **GC2 MCP tools**: For schema changes and provisioning.
-2. **@mapcentia/gc2-sdk**: For application runtime logic.
-3. **OpenAPI**: For direct HTTP calls when needed.
-
-By providing these clear instructions, GC2 ensures that developers and their agents can build robust, production-ready backends with minimal friction.
+Skills are plain Markdown files in `skills/<name>/SKILL.md`, so you can read them yourself to learn the recommended way of doing something, and copy or adapt them for your own project's agent guidelines.
