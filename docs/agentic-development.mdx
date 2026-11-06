@@ -1,6 +1,6 @@
 ---
 title: Agentic Development
-description: Install the GC2 plugin in Claude Code or Codex to give AI coding agents MCP tools and skills for provisioning, querying and styling your GC2 backend.
+description: Install the GC2 plugin in Claude Code or Codex and let an AI agent build on GC2 and operate it as spatial infrastructure, from schemas and imports to snapshots, tiles and access control.
 sidebar_position: 17
 ---
 
@@ -9,7 +9,7 @@ import TabItem from '@theme/TabItem';
 
 # Agentic Development with GC2
 
-Agentic development is a way of building software where you describe what you want and an AI coding agent such as Claude Code or Codex does the implementation: it creates the data model, writes the application code and checks its own work. GC2 (Geo Compute Cloud) is built for this workflow. The **GC2 plugin** gives the agent two things it needs to be good at it: **MCP tools** that act on your backend, and **skills** that teach it how GC2 works and which tool to use when.
+Agentic development is a way of working where you describe what you want and an AI agent such as Claude Code or Codex does it: designs the data model, writes the application code, loads the data, publishes the map services and checks its own work. GC2 (Geo Compute Cloud) is built for this. It is both a Backend as a Service for applications and a piece of **spatial infrastructure**, a PostGIS platform with imports, OGC services, tiles, snapshots and access control, and the whole surface is exposed through one API. The **GC2 plugin** gives an agent two things it needs to use that surface well: **MCP tools** that act on your backend, and **skills** that teach it how GC2 works and which tool to use when. The same plugin therefore serves two jobs: *building* applications on GC2, and *operating* a GC2 instance day to day.
 
 ## What is in the plugin
 
@@ -129,11 +129,28 @@ Get an access token from the [console](/console).
 
 To give such an agent the skills as well, copy `AGENTS.md` and the `skills/` folder from the [plugin repository](https://github.com/mapcentia/gc2-plugin) to the root of your own application's repository. Agents that discover instructions through `AGENTS.md` (Junie, Codex without the plugin, and others) then find the rules on their own. For Claude Code without the plugin, copy `AGENTS.md` to `CLAUDE.md`.
 
+## Operating GC2 with an agent
+
+Every part of GC2 is an API, so every part can be run by an agent. Instead of clicking through the Web App or writing scripts for each chore, you tell the agent what you need and it uses the MCP tools, with the skills telling it the right order and the right checks. Some things an agent handles well:
+
+- **Data pipelines.** "Import this GeoPackage into the `parks` schema, replacing the table, then take a GeoParquet snapshot." The agent uploads and processes the [file](./import.mdx), verifies the row count and geometry type, and queues the [snapshot](./snapshots.mdx).
+- **Scheduled imports.** "Fetch the municipality WFS every night at 02:00, snapshot after each run, and tell me if a run fails." The agent creates the [scheduler](./scheduler.mdx) job with the cron expression and `snapshot: true`, and can later read the run log, explain a failed run and stop a stale one.
+- **Publishing and cartography.** "Publish `roads` as WMS and WFS with a style by road class, and add labels." The agent configures the layer, classes, styles and labels in one atomic update and returns the [OGC service](./ogc/services.mdx) URLs for QGIS or a web map.
+- **Tiles.** "The `basemap` tiles are slow the first time." The agent seeds the tile cache for the zoom levels and extent you name, and clears it after a data update.
+- **Access control.** "Create a read-only sub-user for the consultant with access to `parks` only, and make sure field workers only see features inside their municipality." The agent creates the [user](./users.mdx), grants [privileges](./privileges.mdx) and writes the geofence [rule](./rules.mdx), then verifies the effective privileges.
+- **Inspection and housekeeping.** "Which tables in `staging` have no spatial index?" or "Compare the current `inductees` table with last month's snapshot in DuckDB." The agent runs the queries and reports.
+
+Read operations run freely; writes that drop or overwrite data are proposed first and run only after you confirm, so the agent can be trusted with a production instance.
+
+### The assistant in the Web App
+
+The GC2 Web App has the same agent built in, under **GC2 AI**. It uses the same MCP tools and skills, and every write it proposes is shown as a confirmation in the UI before it runs. It knows which page you are on, so "add a label to this layer" or "snapshot this table" works without further context. Use it for the operational tasks above when you are already in the console; use the plugin in Claude Code or Codex when the task also involves your application code.
+
 ## How the agent works with GC2
 
 `gc2-rules` makes the agent follow a fixed priority, so it reaches for the right tool without being told each time:
 
-1. **GC2 MCP tools** for anything that changes or inspects the backend: schema changes, data import, users, rules, layers, snapshots, scheduler jobs.
+1. **GC2 MCP tools** for anything that changes or inspects the backend: schema changes, data import, users, rules, layers, tiles, snapshots, scheduler jobs.
 2. **`@mapcentia/gc2-sdk`** for application runtime code: SQL, JSON-RPC methods, GraphQL, realtime, features.
 3. **OpenAPI and plain HTTP** only when neither of the above covers the call.
 
