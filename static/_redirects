@@ -2,3 +2,25 @@
 # Both domains are aliases of the same Netlify site, so the rule must be host-scoped.
 https://centia.io/* https://gc2.io/:splat 301!
 https://www.centia.io/* https://gc2.io/:splat 301!
+
+# gc2.io was the hostname of the Danish GC2 instance (now dk.gc2.io) before it
+# became the website. Requests for GC2 paths on gc2.io are sent on to dk.gc2.io
+# so old tile URLs, apps and API clients keep working.
+#
+# Method-preserving: Netlify redirects only support 301/302, which turn POST into
+# GET, so the API, WFS-T and the legacy controllers are proxied (200) instead.
+https://gc2.io/api/* https://dk.gc2.io/api/:splat 200!
+https://gc2.io/wfs/* https://dk.gc2.io/wfs/:splat 200!
+https://gc2.io/controllers/* https://dk.gc2.io/controllers/:splat 200!
+
+# GET-only resources: tiles, WMS, viewers and admin UIs are redirected.
+https://gc2.io/mapcache/* https://dk.gc2.io/mapcache/:splat 301!
+https://gc2.io/wms/* https://dk.gc2.io/wms/:splat 301!
+https://gc2.io/ows/* https://dk.gc2.io/ows/:splat 301!
+https://gc2.io/apps/* https://dk.gc2.io/apps/:splat 301!
+https://gc2.io/app/* https://dk.gc2.io/app/:splat 301!
+https://gc2.io/dashboard/* https://dk.gc2.io/dashboard/:splat 301!
+https://gc2.io/admin.php https://dk.gc2.io/admin.php 301!
+https://gc2.io/swagger/* https://dk.gc2.io/swagger/:splat 301!
+https://gc2.io/xmlschemas/* https://dk.gc2.io/xmlschemas/:splat 301!
+https://gc2.io/cgi-bin/* https://dk.gc2.io/cgi-bin/:splat 301!
